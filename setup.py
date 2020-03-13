@@ -13,7 +13,7 @@ tests_require = [
 
 setup(
         name="pgp-milter",
-        version="0.1.dev0",
+        version="0.1.dev0",  # also change __init__.py
         description="Mail filter for automatic PGP-encryption of messages.",
         long_description=read(
             'README.rst') + '\n\n\n' + read('CHANGES.rst') + '\n\n\n',
