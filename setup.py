@@ -6,6 +6,10 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
+install_requires = [
+    'pymilter',
+]
+
 tests_require = [
     'pytest',
 ]
@@ -36,6 +40,7 @@ setup(
             "Programming Language :: Python :: Implementation :: CPython",
         ],
         packages=["pgp_milter"],
+        install_requires=install_requires,
         extras_require={
             'test': tests_require,
         },
