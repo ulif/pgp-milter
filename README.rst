@@ -7,6 +7,19 @@ Mail filter to automatically PGP encrypt messages
 Install
 =======
 
+Prerequisites
+-------------
+
+We need `pymilter` which relies on the `libmilter` C-library. So, we have to
+install `libmilter` first.  On recent Debian/Ubuntu it is sufficient
+
+    $ sudo apt install libmilter-dev
+
+Install from Source
+-------------------
+
+mainly for development.
+
 Clone the source::
 
     $ git clone https://github.com/ulif/pgp-milter
