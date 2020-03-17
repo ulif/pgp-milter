@@ -2,10 +2,12 @@
 import Milter
 
 
-__version__ = "0.1.dev0"
+__version__ = "0.1.dev0"  # set also in setup.py
 
 
 class GPGMilter(Milter.Base):
     """A milter that currently does nothing.
     """
-    pass
+
+    def __init__(self):
+        self._id = Milter.uniqueID()
