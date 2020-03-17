@@ -46,4 +46,6 @@ setup(
         },
         tests_require=tests_require,
         zip_safe=False,
+        entry_points={
+            'console_scripts': ['pgp-milter = pgp_milter:main']}
 )
