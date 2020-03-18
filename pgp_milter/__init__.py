@@ -10,7 +10,7 @@ __version__ = "0.1.dev0"  # set also in setup.py
 def print_version():
     """Output current version and copyright infos.
     """
-    print("pgp-milter %s" % __version__ )
+    print("pgp-milter %s" % __version__)
     print("Copyright (C) 2020 Uli Fouquet")
 
 
