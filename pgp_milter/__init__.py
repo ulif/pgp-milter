@@ -28,7 +28,7 @@ def handle_options(args):
     return args
 
 
-class GPGMilter(Milter.Base):
+class PGPMilter(Milter.Base):
     """A milter that currently does nothing.
     """
 
