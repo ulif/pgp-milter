@@ -1,4 +1,4 @@
-# make this a package.
+# -*- coding: utf-8 -*-
 import sys
 import Milter
 from argparse import ArgumentParser
@@ -43,3 +43,5 @@ def main(argv=None):
     if args.version:
         print_version()
         sys.exit(0)
+
+# vim: expandtab ts=4 sw=4
