@@ -2,7 +2,7 @@ import pgp_milter
 import pkg_resources
 import pytest
 from pgp_milter import (
-    __version__, handle_options, main
+    __version__, handle_options, main, PGPMilter,
 )
 
 
@@ -32,7 +32,23 @@ def test_handle_options_version():
 
 def test_main_version(capsys):
     # we can output the version
-    with pytest.raises(SystemExit) as exc_info:
+    with pytest.raises(SystemExit):
         main(['--version'])
     out, err = capsys.readouterr()
     assert str(__version__) in out
+
+
+def test_main_sys_argv_considered(capsys, monkeypatch):
+    # we consider args set in sys.argv if none are passed in
+    monkeypatch.setattr("sys.argv", ["scriptname", "--version"])
+    with pytest.raises(SystemExit):
+        main()
+    out, err = capsys.readouterr()
+    assert str(__version__) in out
+
+
+def test_pgp_milter_constructable():
+    # we can create PGPMilters
+    m = PGPMilter()
+    assert hasattr(m, '_id')
+    assert isinstance(m, PGPMilter)
