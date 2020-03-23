@@ -35,6 +35,18 @@ class PGPMilter(Milter.Base):
     def __init__(self):
         self._id = Milter.uniqueID()
 
+    @Milter.noreply
+    def connect(self, ip_name, family, hostaddr):
+        """A client connected to our server.
+
+        We save only some basic connection data that might be interesting for
+        logging.
+        """
+        self._ip = hostaddr[0]
+        self._port = hostaddr[1]
+        self._ip_name = ip_name
+        return Milter.CONTINUE
+
 
 def main(argv=None):
     if argv is None:
