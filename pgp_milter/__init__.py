@@ -47,6 +47,47 @@ class PGPMilter(Milter.Base):
         self._ip_name = ip_name
         return Milter.CONTINUE
 
+    @Milter.noreply
+    def hello(self, hostname):
+        """Called on hello.
+        """
+        return Milter.CONTINUE
+
+    @Milter.noreply
+    def envfrom(self, name, *esmtp_params):
+        """Called on MAIL FROM.
+        """
+        return Milter.CONTINUE
+
+    @Milter.noreply
+    def envrcpt(self, name, *strings):
+        """Called ON RCPT TO.
+        """
+        return Milter.CONTINUE
+
+    @Milter.noreply
+    def header(self, hkey, kval):
+        """Called for each header line.
+        """
+        return Milter.CONTINUE
+
+    def eoh(self):
+        """Called when all headers have been processed.
+
+        (end-of-headers)
+        """
+        return Milter.CONTINUE
+
+    def eom(self):
+        """Called when end of message is reached.
+        """
+        return Milter.CONTINUE
+
+    def close(self):
+        """Called when connection is closed.
+        """
+        return Milter.CONTINUE
+
 
 def main(argv=None):
     if argv is None:
