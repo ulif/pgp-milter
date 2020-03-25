@@ -1,6 +1,8 @@
 import pgp_milter
 import pkg_resources
 import pytest
+import Milter
+from Milter.testctx import TestCtx as MilterTestCtx  # Avoid pytest confusion
 from pgp_milter import (
     __version__, handle_options, main, PGPMilter,
 )
@@ -52,3 +54,18 @@ def test_pgp_milter_constructable():
     m = PGPMilter()
     assert hasattr(m, '_id')
     assert isinstance(m, PGPMilter)
+
+
+class TestPGPMilter(object):
+
+    def test_create(self):
+        # we can create PGPMilters
+        assert PGPMilter() is not None
+
+    def test_connect(self):
+        # we handle connects properly
+        ctx = Milter.testctx.TestCtx()
+        Milter.factory = PGPMilter
+        rc = ctx._connect()
+        assert rc == Milter.NOREPLY
+        assert ctx.getpriv()._ip_name == 'localhost'
