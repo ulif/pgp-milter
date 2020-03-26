@@ -1,8 +1,7 @@
 import pgp_milter
 import pkg_resources
 import pytest
-import Milter
-from Milter.testctx import TestCtx as MilterTestCtx  # Avoid pytest confusion
+import Milter.testctx
 from pgp_milter import (
     __version__, handle_options, main, PGPMilter,
 )
