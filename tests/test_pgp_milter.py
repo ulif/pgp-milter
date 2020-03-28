@@ -68,3 +68,16 @@ class TestPGPMilter(object):
         rc = ctx._connect()
         assert rc == Milter.NOREPLY
         assert ctx.getpriv()._ip_name == 'localhost'
+
+    def test_eom(self):
+        # we are called back on end of message
+        ctx = Milter.testctx.TestCtx()
+        Milter.factory = PGPMilter
+        ctx._connect()
+        with open("tests/sample_body1.txt", "rb") as fp:
+            ctx._feedFile(fp)
+        rc = ctx._eom()
+        assert rc == Milter.CONTINUE
+        assert ctx._msg['To'] == 'Jriser13@aol.com'
+
+# vim: expandtab ts=4 sw=4
