@@ -69,6 +69,17 @@ class TestPGPMilter(object):
         assert rc == Milter.NOREPLY
         assert ctx.getpriv()._ip_name == 'localhost'
 
+    def test_eoh(self):
+        # we are called back on end of headers
+        ctx = Milter.testctx.TestCtx()
+        Milter.factory = PGPMilter
+        ctx._connect()
+        with open("tests/sample_body1.txt", "rb") as fp:
+            ctx._feedFile(fp)
+        rc = ctx._eoh()
+        assert rc == Milter.CONTINUE
+        assert ctx._msg['To'] == 'Jriser13@aol.com'
+
     def test_eom(self):
         # we are called back on end of message
         ctx = Milter.testctx.TestCtx()
