@@ -77,8 +77,10 @@ class TestPGPMilter(object):
         with open("tests/sample_body1.txt", "rb") as fp:
             ctx._feedFile(fp)
         rc = ctx._eoh()
+        m = ctx.getpriv()
         assert rc == Milter.CONTINUE
         assert ctx._msg['To'] == 'Jriser13@aol.com'
+        assert m.headers_seen['To'] == ['Jriser13@aol.com']
 
     def test_eom(self):
         # we are called back on end of message

@@ -45,6 +45,7 @@ class PGPMilter(Milter.Base):
         self._ip = hostaddr[0]
         self._port = hostaddr[1]
         self._ip_name = ip_name
+        self.headers_seen = dict()
         return Milter.CONTINUE
 
     @Milter.noreply
@@ -66,9 +67,13 @@ class PGPMilter(Milter.Base):
         return Milter.CONTINUE
 
     @Milter.noreply
-    def header(self, hkey, kval):
+    def header(self, hkey, hval):
         """Called for each header line.
         """
+        if hkey in self.headers_seen:
+            self.headers_seen[hkey].append(hval)
+        else:
+            self.headers_seen[hkey] = [hval]
         return Milter.CONTINUE
 
     def eoh(self):
