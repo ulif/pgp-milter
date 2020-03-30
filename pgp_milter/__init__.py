@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
+import tempfile
 import Milter
 from argparse import ArgumentParser
 
@@ -80,6 +81,11 @@ class PGPMilter(Milter.Base):
         """Called when all headers have been processed.
 
         (end-of-headers)
+        """
+        return Milter.CONTINUE
+
+    def body(self, chunk):
+        """Called for each chunk of message body.
         """
         return Milter.CONTINUE
 
