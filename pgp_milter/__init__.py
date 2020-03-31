@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
-import tempfile
 import Milter
 from argparse import ArgumentParser
+from io import BytesIO
 
 
 __version__ = "0.1.dev0"  # set also in setup.py
@@ -35,6 +35,8 @@ class PGPMilter(Milter.Base):
 
     def __init__(self):
         self._id = Milter.uniqueID()
+        self.fp = None
+        self.headers_seen = dict()
 
     @Milter.noreply
     def connect(self, ip_name, family, hostaddr):
@@ -46,7 +48,6 @@ class PGPMilter(Milter.Base):
         self._ip = hostaddr[0]
         self._port = hostaddr[1]
         self._ip_name = ip_name
-        self.headers_seen = dict()
         return Milter.CONTINUE
 
     @Milter.noreply
@@ -58,7 +59,11 @@ class PGPMilter(Milter.Base):
     @Milter.noreply
     def envfrom(self, name, *esmtp_params):
         """Called on MAIL FROM.
+
+        This is the sign for a new message. There might be multiple messages
+        per connection.
         """
+        self.fp = BytesIO()
         return Milter.CONTINUE
 
     @Milter.noreply
@@ -75,6 +80,9 @@ class PGPMilter(Milter.Base):
             self.headers_seen[hkey].append(hval)
         else:
             self.headers_seen[hkey] = [hval]
+        if self.fp:
+            hline = '%s: %s' % (hkey, hval)
+            self.fp.write(hline.encode())
         return Milter.CONTINUE
 
     def eoh(self):
