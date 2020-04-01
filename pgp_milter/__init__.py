@@ -51,12 +51,6 @@ class PGPMilter(Milter.Base):
         return Milter.CONTINUE
 
     @Milter.noreply
-    def hello(self, hostname):
-        """Called on hello.
-        """
-        return Milter.CONTINUE
-
-    @Milter.noreply
     def envfrom(self, name, *esmtp_params):
         """Called on MAIL FROM.
 
