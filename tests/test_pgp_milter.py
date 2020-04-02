@@ -65,9 +65,21 @@ class TestPGPMilter(object):
         # we handle connects properly
         ctx = Milter.testctx.TestCtx()
         Milter.factory = PGPMilter
-        rc = ctx._connect()
+        rc = ctx._connect("sample.host")
         assert rc == Milter.NOREPLY
-        assert ctx.getpriv()._ip_name == 'localhost'
+        assert ctx.getpriv()._ip_name == 'sample.host'
+
+    def test_header(self):
+        # header lines are stored
+        ctx = Milter.testctx.TestCtx()
+        Milter.factory = PGPMilter
+        rc = ctx._connect()
+        ctx._header("X-Foo", "foo")
+        ctx._header("X-Foo", "bar")
+        m = ctx.getpriv()
+        assert m.headers_seen == {
+                'X-Foo': ['foo', 'bar']
+        }
 
     def test_eoh(self):
         # we are called back on end of headers
