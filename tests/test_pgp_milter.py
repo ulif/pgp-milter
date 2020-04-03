@@ -73,7 +73,7 @@ class TestPGPMilter(object):
         # header lines are stored
         ctx = Milter.testctx.TestCtx()
         Milter.factory = PGPMilter
-        rc = ctx._connect()
+        ctx._connect()
         ctx._header("X-Foo", "foo")
         ctx._header("X-Foo", "bar")
         m = ctx.getpriv()
