@@ -77,9 +77,9 @@ class TestPGPMilter(object):
         ctx._header("X-Foo", "foo")
         ctx._header("X-Foo", "bar")
         m = ctx.getpriv()
-        assert m.headers_seen == {
-                'X-Foo': ['foo', 'bar']
-        }
+        assert m.headers_seen == [
+                ('X-Foo', 'foo'),
+                ('X-Foo', 'bar')]
 
     def test_eoh(self):
         # we are called back on end of headers
@@ -92,7 +92,7 @@ class TestPGPMilter(object):
         m = ctx.getpriv()
         assert rc == Milter.CONTINUE
         assert ctx._msg['To'] == 'Jriser13@aol.com'
-        assert m.headers_seen['To'] == ['Jriser13@aol.com']
+        assert ('To', 'Jriser13@aol.com') in m.headers_seen
 
     def test_eom(self):
         # we are called back on end of message

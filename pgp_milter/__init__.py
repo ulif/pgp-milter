@@ -36,7 +36,7 @@ class PGPMilter(Milter.Base):
     def __init__(self):
         self._id = Milter.uniqueID()
         self.fp = None
-        self.headers_seen = dict()
+        self.headers_seen = []
 
     @Milter.noreply
     def connect(self, ip_name, family, hostaddr):
@@ -70,10 +70,7 @@ class PGPMilter(Milter.Base):
     def header(self, hkey, hval):
         """Called for each header line.
         """
-        if hkey in self.headers_seen:
-            self.headers_seen[hkey].append(hval)
-        else:
-            self.headers_seen[hkey] = [hval]
+        self.headers_seen.append((hkey, hval), )
         if self.fp:
             hline = '%s: %s' % (hkey, hval)
             self.fp.write(hline.encode())
