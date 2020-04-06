@@ -8,6 +8,7 @@ def read(fname):
 
 install_requires = [
     'pymilter',
+    'pretty-bad-protocol',
 ]
 
 tests_require = [
