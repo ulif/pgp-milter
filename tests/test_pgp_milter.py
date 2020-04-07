@@ -100,7 +100,9 @@ class TestPGPMilter(object):
         Milter.factory = PGPMilter
         ctx._connect()
         with open("tests/sample_body1.txt", "rb") as fp:
-            ctx._feedFile(fp)
+            rc = ctx._feedFile(fp)
+        assert rc == Milter.CONTINUE
+        assert ctx._body.getvalue().startswith(b"Return-Path:")
         rc = ctx._eom()
         assert rc == Milter.CONTINUE
         assert ctx._msg['To'] == 'Jriser13@aol.com'
