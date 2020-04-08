@@ -57,6 +57,8 @@ class PGPMilter(Milter.Base):
         This is the sign for a new message. There might be multiple messages
         per connection.
         """
+        if self.fp:
+            self.fp.close()
         self.fp = BytesIO()
         return Milter.CONTINUE
 
@@ -81,11 +83,15 @@ class PGPMilter(Milter.Base):
 
         (end-of-headers)
         """
+        if self.fp:
+            self.fp.write(b'\n')
         return Milter.CONTINUE
 
     def body(self, chunk):
         """Called for each chunk of message body.
         """
+        if self.fp:
+            self.fp.write(chunk)
         return Milter.CONTINUE
 
     def eom(self):
@@ -96,6 +102,8 @@ class PGPMilter(Milter.Base):
     def close(self):
         """Called when connection is closed.
         """
+        if self.fp:
+            self.fp.close()
         return Milter.CONTINUE
 
 
