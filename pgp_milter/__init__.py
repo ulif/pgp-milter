@@ -20,7 +20,7 @@ def handle_options(args):
     """
     parser = ArgumentParser(
         description=(
-            "Mail filter for encrypting/decrypting mails on the fly"))
+            "Mail filter for PGP-encrypting/decrypting mails on the fly"))
     parser.add_argument(
         '--version', action='store_true',
         help='output version information and exit.',
