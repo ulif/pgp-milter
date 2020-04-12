@@ -28,3 +28,9 @@ def test_parse_raw():
     body = open('tests/sample_body1.txt', 'rb').read().split(b"\n\n\n")[-1]
     parsed = pgp.parse_raw(headers, body)
     assert isinstance(parsed, Message)
+
+
+def test_gpg_encrypt(tmpdir):
+    # we can pgp encrypt text
+    import pretty_bad_protocol as gnupg
+    gpg = gnupg.GPG(homedir=tmpdir)
