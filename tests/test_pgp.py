@@ -2,6 +2,7 @@
 #
 # tests for the `pgp` module.
 #
+import pretty_bad_protocol as gnupg
 from email.message import Message
 from pgp_milter import pgp
 
@@ -32,5 +33,9 @@ def test_parse_raw():
 
 def test_gpg_encrypt(tmpdir):
     # we can pgp encrypt text
-    import pretty_bad_protocol as gnupg
     gpg = gnupg.GPG(homedir=tmpdir)
+    ascii_key = open("tests/alice.pub", "r").read()
+    gpg.import_keys(ascii_key)
+    fpr = gpg.list_keys()[0]['fingerprint']
+    msg = pgp.gpg_encrypt(gpg, "meet me at dawn", fpr)
+    assert str(msg).startswith("-----BEGIN PGP MESSAGE-----")
