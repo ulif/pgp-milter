@@ -19,4 +19,4 @@ def parse_raw(headers, body):
 def gpg_encrypt(gpg, text, fpr):
     """Encrypt `text` for fingerprint `fpr`.
     """
-    return gpg.encrypt(text, fpr)
+    return gpg.encrypt(text, fpr, always_trust=True)

@@ -8,7 +8,7 @@ def read(fname):
 
 install_requires = [
     'pymilter',
-    'pretty-bad-protocol',
+    'python-gnupg',
 ]
 
 tests_require = [
