@@ -11,7 +11,9 @@ def test_parse_raw():
     # we can turn raw messages into Message objects
     headers = [
         (b'Return-Path', b'<lauren@foobar.com>'),
-        (b'Received', b'from foobar.com (localhost [127.0.0.1])\n	by hemholt.foobar.com (8.9.3/8.8.7) with ESMTP id SAA03001;\n	Mon, 29 Jan 2001 18:08:41 -0500'),
+        (b'Received', b'from foobar.com (localhost [127.0.0.1])'
+         b'\n	by hemholt.foobar.com (8.9.3/8.8.7) with ESMTP id SAA03001;'
+         b'\n	Mon, 29 Jan 2001 18:08:41 -0500'),
         (b'Sender', b'lauren@foobar.com'),
         (b'Message-ID', b'<3A75F7F6.CBF9E75@foobar.com>'),
         (b'Date', b'Mon, 29 Jan 2001 18:08:39 -0500'),
@@ -23,7 +25,8 @@ def test_parse_raw():
         (b'To', b'Jriser13@aol.com'),
         (b'Subject', b'Re: P.B.S kids'),
         (b'References', b'<e4.1045e74c.27a7018b@aol.com>'),
-        (b'Content-Type', b'multipart/alternative;\n boundary="------------7EC2082FC4F651D73FCD6FE1"'),
+        (b'Content-Type', b'multipart/alternative;'
+         b'\n boundary="------------7EC2082FC4F651D73FCD6FE1"'),
         (b'Status', b'O')
     ]
     body = open('tests/sample_body1.txt', 'rb').read().split(b"\n\n\n")[-1]
