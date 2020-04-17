@@ -2,7 +2,6 @@
 #
 # OpenPGP related stuff
 #
-from email.message import Message
 from email.parser import Parser
 from email.policy import default
 
