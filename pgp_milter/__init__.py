@@ -59,6 +59,7 @@ class PGPMilter(Milter.Base):
         """
         if self.fp:
             self.fp.close()
+            self.headers_seen = []
         self.fp = BytesIO()
         return Milter.CONTINUE
 

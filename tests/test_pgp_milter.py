@@ -94,4 +94,17 @@ class TestPGPMilter(object):
         assert rc == Milter.CONTINUE
         assert ctx._msg['To'] == 'Jriser13@aol.com'
 
+    def test_envfrom_blanks_seen_data(self):
+        # stored messages and headers are blanked on each msg from
+        ctx = Milter.testctx.TestCtx()
+        Milter.factory = PGPMilter
+        ctx._connect()
+        ctx._envfrom("foo@bar")
+        ctx._header("X-Foo", "foo")
+        assert ctx.getpriv().fp is not None
+        assert b"X-Foo" in ctx.getpriv().fp.getvalue()
+        ctx._envfrom("bar@baz")
+        assert b"X-Foo" not in ctx.getpriv().fp.getvalue()
+
+
 # vim: expandtab ts=4 sw=4
