@@ -106,5 +106,16 @@ class TestPGPMilter(object):
         ctx._envfrom("bar@baz")
         assert b"X-Foo" not in ctx.getpriv().fp.getvalue()
 
+    def test_close_closes_also_fp(self):
+        # the local filepointer is closed then the connection closes.
+        ctx = Milter.testctx.TestCtx()
+        Milter.factory = PGPMilter
+        ctx._connect()
+        ctx._envfrom("foo@bar")
+        ctx._header("X-Foo", "foo")
+        assert ctx.getpriv().fp.closed is False
+        ctx._close()
+        assert ctx.getpriv().fp.closed is True
+
 
 # vim: expandtab ts=4 sw=4
