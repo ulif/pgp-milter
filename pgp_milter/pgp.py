@@ -15,7 +15,7 @@ def parse_raw(headers, body):
     return Parser(policy=default).parsestr(raw_msg)
 
 
-def gpg_encrypt(gpg, text, fpr):
+def gpg_encrypt(gpg_env, text, fpr):
     """Encrypt `text` for fingerprint `fpr`.
     """
-    return gpg.encrypt(text, fpr, always_trust=True)
+    return gpg_env.encrypt(text, fpr, always_trust=True)
