@@ -2,6 +2,7 @@
 #
 # OpenPGP related stuff
 #
+import email.mime.text
 from email.parser import Parser
 from email.policy import default
 
@@ -19,3 +20,7 @@ def gpg_encrypt(gpg_env, text, fpr):
     """Encrypt `text` for fingerprint `fpr`.
     """
     return gpg_env.encrypt(text, fpr, always_trust=True)
+
+
+def as_mime(text):
+    return email.mime.text.MIMEText(_text=text)
