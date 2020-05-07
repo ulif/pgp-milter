@@ -42,3 +42,14 @@ def test_gpg_encrypt(tmpdir):
     fpr = gpg.list_keys()[0]['fingerprint']
     msg = pgp.gpg_encrypt(gpg, "meet me at dawn", fpr)
     assert str(msg).startswith("-----BEGIN PGP MESSAGE-----")
+
+
+def test_as_mime():
+    # we can turn text into MIMEtext
+    result = pgp.as_mime("meet me at dawn")
+    assert result.as_string() == (
+        'Content-Type: text/plain; charset="us-ascii"\n'
+        'MIME-Version: 1.0\n'
+        'Content-Transfer-Encoding: 7bit\n'
+        '\n'
+        'meet me at dawn')
