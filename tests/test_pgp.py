@@ -53,3 +53,14 @@ def test_as_mime():
         'Content-Transfer-Encoding: 7bit\n'
         '\n'
         'meet me at dawn')
+
+
+def test_as_mime_utf8():
+    # MIME encoder can handle utf8
+    result = pgp.as_mime("Cäsar")
+    assert result.as_string() == (
+        'Content-Type: text/plain; charset="utf-8"\n'
+        'MIME-Version: 1.0\n'
+        'Content-Transfer-Encoding: base64\n'
+        '\n'
+        'Q8Okc2Fy\n')
