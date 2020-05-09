@@ -11,7 +11,7 @@ Prerequisites
 -------------
 
 We need `pymilter` which relies on the `libmilter` C-library. So, we have to
-install `libmilter` first.  On recent Debian/Ubuntu it is sufficient
+install `libmilter` first.  On recent Debian/Ubuntu it is sufficient to do
 
     $ sudo apt install libmilter-dev
 
