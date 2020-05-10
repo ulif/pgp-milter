@@ -39,7 +39,12 @@ Running Tests
 
 We use `tox` and `py-test` for testing. So,::
 
-    $ pip install tox
+    $ pip install tox pytest
     $ tox
 
-should run all tests.
+should run all tests with all officially supported Python versions. For quickly
+running tests::
+
+    $ py.test
+
+should be sufficient.
