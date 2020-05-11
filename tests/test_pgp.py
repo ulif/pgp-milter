@@ -7,6 +7,11 @@ from email.message import Message
 from pgp_milter import pgp
 
 
+# PGP fingerprints
+FPR_ALICE = "FC576D66A075141F41770B15F028476ACE63FE41"
+FPR_BOB = "FDBE48E6FE58D021A5C8BE3B982AD46FA8789D5C"
+
+
 def test_parse_raw():
     # we can turn raw messages into Message objects
     headers = [
@@ -39,8 +44,7 @@ def test_gpg_encrypt(tmpdir):
     gpg = gnupg.GPG(gnupghome=str(tmpdir))
     ascii_key = open("tests/alice.pub", "r").read()
     gpg.import_keys(ascii_key)
-    fpr = gpg.list_keys()[0]['fingerprint']
-    msg = pgp.gpg_encrypt(gpg, "meet me at dawn", fpr)
+    msg = pgp.gpg_encrypt(gpg, "meet me at dawn", FPR_ALICE)
     assert str(msg).startswith("-----BEGIN PGP MESSAGE-----")
     assert len(str(msg)) < 1000
 
@@ -51,9 +55,7 @@ def test_gpg_encrypt_multiple_recipients(tmpdir):
     ascii_key1 = open("tests/alice.pub", "r").read()
     ascii_key2 = open("tests/bob.pub", "r").read()
     gpg.import_keys(ascii_key1 + ascii_key2)
-    fpr1 = gpg.list_keys()[0]['fingerprint']
-    fpr2 = gpg.list_keys()[1]['fingerprint']
-    msg = pgp.gpg_encrypt(gpg, "meet me at dawn", [fpr1, fpr2])
+    msg = pgp.gpg_encrypt(gpg, "meet me at dawn", [FPR_ALICE, FPR_BOB])
     assert str(msg).startswith("-----BEGIN PGP MESSAGE-----")
     assert len(str(msg)) >= 1000
 
