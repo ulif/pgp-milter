@@ -42,6 +42,20 @@ def test_gpg_encrypt(tmpdir):
     fpr = gpg.list_keys()[0]['fingerprint']
     msg = pgp.gpg_encrypt(gpg, "meet me at dawn", fpr)
     assert str(msg).startswith("-----BEGIN PGP MESSAGE-----")
+    assert len(str(msg)) < 1000
+
+
+def test_gpg_encrypt_multiple_recipients(tmpdir):
+    # we can encrypt for several recipients in a row
+    gpg = gnupg.GPG(gnupghome=str(tmpdir))
+    ascii_key1 = open("tests/alice.pub", "r").read()
+    ascii_key2 = open("tests/bob.pub", "r").read()
+    gpg.import_keys(ascii_key1 + ascii_key2)
+    fpr1 = gpg.list_keys()[0]['fingerprint']
+    fpr2 = gpg.list_keys()[1]['fingerprint']
+    msg = pgp.gpg_encrypt(gpg, "meet me at dawn", [fpr1, fpr2])
+    assert str(msg).startswith("-----BEGIN PGP MESSAGE-----")
+    assert len(str(msg)) >= 1000
 
 
 def test_as_mime():
