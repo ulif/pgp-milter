@@ -1,0 +1,12 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: pgp-milter
+Upstream-Contact: Uli Fouquet <uli@gnufix.de>
+Source: https://github.com/ulif/pgp-milter
+
+Files: setup.py pgp_milter/*.py tests/*.py
+Copyright: 2019 Uli Fouquet <uli@gnufix.de>
+License: GPL-3.0-or-later
+
+Files: *.rst *.cfg *.pub *.txt *.ini .gitignore *uli
+Copyright: 2019 Uli Fouquet <uli@gnufix.de>
+License: CC-BY-SA-4.0
