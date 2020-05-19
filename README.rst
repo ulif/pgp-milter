@@ -48,3 +48,15 @@ running tests::
     $ py.test
 
 should be sufficient.
+
+
+License/Copyright
+=================
+
+All Python code is licensed under GPL-3.0-or-later.
+All other files are licensed under CC-BY-SA-4.0.
+
+For details, please check `.reuse/dep5`.
+
+`pgp-milter` is Copyright (c) 2019 Uli Fouquet <uli@gnufix,de>
+
