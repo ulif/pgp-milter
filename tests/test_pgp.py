@@ -12,6 +12,18 @@ FPR_ALICE = "FC576D66A075141F41770B15F028476ACE63FE41"
 FPR_BOB = "FDBE48E6FE58D021A5C8BE3B982AD46FA8789D5C"
 
 
+def remove_pgp_msg(text):
+    # helper to remove pgp messages out of MIME containers.
+    # pgp messages differ from each other when generated, even if they encrypt
+    # the same message.
+    parts = text.split('PGP MESSAGE-----\n')
+    stripped = (
+        parts[0]
+        + "PGP MESSAGE-----\n\n<PGP STUFF>\n\n-----END PGP MESSAGE-----\n"
+        + parts[2])
+    return stripped
+
+
 def test_parse_raw():
     # we can turn raw messages into Message objects
     headers = [
