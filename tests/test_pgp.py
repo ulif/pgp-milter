@@ -92,3 +92,15 @@ def test_as_mime_utf8():
         'Content-Transfer-Encoding: base64\n'
         '\n'
         'Q8Okc2Fy\n')
+
+
+def test_pgp_mime_encrypt(tmpdir):
+    # we can create PGP-MIME messages from MIME
+    gpg = gnupg.GPG(gnupghome=str(tmpdir))
+    gpg.import_keys(open("tests/alice.pub", "r").read())
+    mime_msg = pgp.as_mime("meet me at dawn")
+    result = pgp.pgp_mime_encrypt(gpg, mime_msg, FPR_ALICE)
+    result.set_boundary('===============1111111111111111111==')
+    expected = remove_pgp_msg(
+        open("tests/sample_mime_enc_body.txt", "r").read())
+    assert remove_pgp_msg(result.as_string()) == expected
