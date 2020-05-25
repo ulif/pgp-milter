@@ -20,10 +20,13 @@ def handle_options(args):
     """
     parser = ArgumentParser(
         description=(
-            "Mail filter for PGP-encrypting/decrypting mails on the fly"))
+            "Mail filter for PGP-encrypting/decrypting mails on the fly"
+        )
+    )
     parser.add_argument(
-        '--version', action='store_true',
-        help='output version information and exit.',
+        "--version",
+        action="store_true",
+        help="output version information and exit.",
     )
     args = parser.parse_args(args)
     return args
@@ -73,9 +76,9 @@ class PGPMilter(Milter.Base):
     def header(self, hkey, hval):
         """Called for each header line.
         """
-        self.headers_seen.append((hkey, hval), )
+        self.headers_seen.append((hkey, hval),)
         if self.fp:
-            hline = '%s: %s' % (hkey, hval)
+            hline = "%s: %s" % (hkey, hval)
             self.fp.write(hline.encode())
         return Milter.CONTINUE
 
@@ -85,7 +88,7 @@ class PGPMilter(Milter.Base):
         (end-of-headers)
         """
         if self.fp:
-            self.fp.write(b'\n')
+            self.fp.write(b"\n")
         return Milter.CONTINUE
 
     def body(self, chunk):
@@ -115,5 +118,6 @@ def main(argv=None):
     if args.version:
         print_version()
         sys.exit(0)
+
 
 # vim: expandtab ts=4 sw=4
