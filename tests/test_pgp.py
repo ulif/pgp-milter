@@ -2,6 +2,7 @@
 #
 # tests for the `pgp` module.
 #
+import re
 import gnupg
 from email.message import Message
 from pgp_milter import pgp
@@ -12,16 +13,16 @@ FPR_ALICE = "FC576D66A075141F41770B15F028476ACE63FE41"
 FPR_BOB = "FDBE48E6FE58D021A5C8BE3B982AD46FA8789D5C"
 
 
-def remove_pgp_msg(text):
+def replace_pgp_msg(text):
     # helper to remove pgp messages out of MIME containers.
     # pgp messages differ from each other when generated, even if they encrypt
     # the same message.
-    parts = text.split('PGP MESSAGE-----\n')
-    stripped = (
-        parts[0]
-        + "PGP MESSAGE-----\n\n<PGP STUFF>\n\n-----END PGP MESSAGE-----\n"
-        + parts[2])
-    return stripped
+    return re.sub(
+            "-----BEGIN PGP MESSAGE-----\n\n(.+?)-----END PGP MESSAGE-----",
+            "-----BEGIN PGP MESSAGE-----\n\n<PGP STUFF>\n\n-----END PGP MESSAGE-----",
+            text,
+            flags=re.M + re.S
+    )
 
 
 def test_parse_raw():
@@ -101,6 +102,6 @@ def test_pgp_mime_encrypt(tmpdir):
     mime_msg = pgp.as_mime("meet me at dawn")
     result = pgp.pgp_mime_encrypt(gpg, mime_msg, FPR_ALICE)
     result.set_boundary('===============1111111111111111111==')
-    expected = remove_pgp_msg(
+    expected = replace_pgp_msg(
         open("tests/sample_mime_enc_body.txt", "r").read())
-    assert remove_pgp_msg(result.as_string()) == expected
+    assert replace_pgp_msg(result.as_string()) == expected
