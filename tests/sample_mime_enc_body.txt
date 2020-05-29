@@ -1,5 +1,6 @@
 Content-Type: multipart/encrypted; protocol="application/pgp-encrypted"; boundary="===============1111111111111111111=="
 MIME-Version: 1.0
+Content-Disposition: inline
 
 --===============1111111111111111111==
 Content-Type: application/pgp-encrypted

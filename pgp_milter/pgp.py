@@ -45,6 +45,7 @@ def pgp_mime_encrypt(gpg_env, mime_msg, fpr):
         _encoder=email.encoders.encode_7or8bit,
     )
     multipart_container.attach(part2)
+    multipart_container["Content-Disposition"] = "inline"
     return multipart_container
 
 
