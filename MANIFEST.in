@@ -1,4 +1,5 @@
+exclude pyproject.toml
 recursive-include tests *.pub *.py *.txt
 recursive-include LICENSES *.txt
 recursive-include .reuse dep5
-include CHANGES.rst COPYRIGHT README.rst requirements.txt setup.cfg setup.py tox.ini
+include CHANGES.rst COPYRIGHT MANIFEST.in README.rst requirements.txt setup.cfg setup.py tox.ini
