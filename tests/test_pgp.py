@@ -19,7 +19,10 @@ def replace_pgp_msg(text):
     # the same message.
     return re.sub(
         "-----BEGIN PGP MESSAGE-----\n\n(.+?)-----END PGP MESSAGE-----",
-        "-----BEGIN PGP MESSAGE-----\n\n<PGP STUFF>\n\n-----END PGP MESSAGE-----",
+        (
+            "-----BEGIN PGP MESSAGE-----\n\n"
+            "<PGP STUFF>\n\n-----END PGP MESSAGE-----"
+        ),
         text,
         flags=re.M + re.S,
     )
