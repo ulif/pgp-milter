@@ -45,7 +45,7 @@ setup(
     ],
     packages=["pgp_milter"],
     install_requires=install_requires,
-    extras_require={"test": tests_require,},
+    extras_require={"test": tests_require, },
     tests_require=tests_require,
     zip_safe=False,
     entry_points={"console_scripts": ["pgp-milter = pgp_milter:main"]},
