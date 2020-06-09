@@ -111,6 +111,15 @@ class PGPMilter(Milter.Base):
         return Milter.CONTINUE
 
 
+def run():
+    """Start a milter loop.
+    """
+    Milter.factory = PGPMilter
+    Milter.set_flags(Milter.CHGHDRS + Milter.ADDHDRS + Milter.QUARANTINE)
+    Milter.runmilter('pgpmilter', 'inet6:30072@[::1]', timeout=300)
+
+
+
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
