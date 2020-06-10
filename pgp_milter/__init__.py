@@ -115,9 +115,8 @@ def run():
     """Start a milter loop.
     """
     Milter.factory = PGPMilter
-    Milter.set_flags(Milter.CHGHDRS + Milter.ADDHDRS + Milter.QUARANTINE)
+    Milter.set_flags(Milter.CHGHDRS + Milter.ADDHDRS + Milter.MODBODY)
     Milter.runmilter('pgpmilter', 'inet6:30072@[::1]', timeout=300)
-
 
 
 def main(argv=None):
