@@ -116,12 +116,12 @@ class PGPMilter(Milter.Base):
         return Milter.CONTINUE
 
 
-def run():
+def run(name, sock, timeout=300):
     """Start a milter loop.
     """
     Milter.factory = PGPMilter
     Milter.set_flags(Milter.CHGHDRS + Milter.ADDHDRS + Milter.MODBODY)
-    Milter.runmilter('pgpmilter', 'inet6:30072@[::1]', timeout=300)
+    Milter.runmilter(name, sock, timeout=timeout)
 
 
 def main(argv=None):
