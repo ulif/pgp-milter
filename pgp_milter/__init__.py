@@ -8,6 +8,9 @@ from io import BytesIO
 __version__ = "0.1.dev0"  # set also in setup.py
 
 
+PORT = '30072'
+
+
 def print_version():
     """Output current version and copyright infos.
     """
@@ -26,7 +29,7 @@ def handle_options(args):
     parser.add_argument(
         "--socket", "-s",
         type=str,
-        default="inet6:{0}@{1}".format('30072', '[::1]'),
+        default="inet6:{0}@{1}".format(PORT, '[::1]'),
         help="IPv4, IPv6 or unix socket (default: %(default)s)")
     parser.add_argument(
         "--version",
