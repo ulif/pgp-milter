@@ -131,6 +131,7 @@ def main(argv=None):
     if args.version:
         print_version()
         sys.exit(0)
+    run('pgpmilter', args.socket)
 
 
 # vim: expandtab ts=4 sw=4
