@@ -8,6 +8,8 @@ from io import BytesIO
 __version__ = "0.1.dev0"  # set also in setup.py
 
 
+# Default values
+BINDADDR = '[::1]'
 PORT = '30072'
 
 
@@ -29,7 +31,7 @@ def handle_options(args):
     parser.add_argument(
         "--socket", "-s",
         type=str,
-        default="inet6:{0}@{1}".format(PORT, '[::1]'),
+        default="inet6:{0}@{1}".format(PORT, BINDADDR),
         help="IPv4, IPv6 or unix socket (default: %(default)s)")
     parser.add_argument(
         "--version",
