@@ -48,6 +48,10 @@ class PGPMilter(Milter.Base):
 
     def __init__(self):
         self._id = Milter.uniqueID()
+        self._ip = None
+        self._ip_name = None
+        self._port = None
+
         self.fp = None
         self.headers_seen = []
 
