@@ -29,6 +29,11 @@ def handle_options(args):
         )
     )
     parser.add_argument(
+		"--debug", "-d",
+        default=False,
+        action="store_true",
+        help="Enable debug output."),
+    parser.add_argument(
         "--socket", "-s",
         type=str,
         default="inet6:{0}@{1}".format(PORT, BINDADDR),
