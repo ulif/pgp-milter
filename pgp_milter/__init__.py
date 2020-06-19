@@ -70,6 +70,10 @@ class PGPMilter(Milter.Base):
         self._ip = hostaddr[0]
         self._port = hostaddr[1]
         self._ip_name = ip_name
+        print("Connect from %s[%s]:%s" % (
+            self._ip_name,
+            self._ip,
+            self._port))
         return Milter.CONTINUE
 
     @Milter.noreply
