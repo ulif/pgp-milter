@@ -29,7 +29,7 @@ def handle_options(args):
         )
     )
     parser.add_argument(
-		"--debug", "-d",
+        "--debug", "-d",
         default=False,
         action="store_true",
         help="Enable debug output."),
