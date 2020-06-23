@@ -138,7 +138,7 @@ def run(name, sock, timeout=300):
     """Start a milter loop.
     """
     Milter.factory = PGPMilter
-    Milter.set_flags(Milter.CHGHDRS + Milter.ADDHDRS + Milter.MODBODY)
+    Milter.set_flags(Milter.CHGHDRS + Milter.ADDHDRS + Milter.CHGBODY)
     Milter.runmilter(name, sock, timeout=timeout)
 
 
