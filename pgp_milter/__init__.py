@@ -83,9 +83,9 @@ class PGPMilter(Milter.Base):
         This is the sign for a new message. There might be multiple messages
         per connection.
         """
-        if self.fp:
+        if hasattr(self, "fp") and self.fp:
             self.fp.close()
-            self.headers_seen = []
+        self.headers_seen = []
         self.fp = BytesIO()
         return Milter.CONTINUE
 
