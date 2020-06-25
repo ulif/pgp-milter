@@ -124,7 +124,9 @@ class PGPMilter(Milter.Base):
     def eom(self):
         """Called when end of message is reached.
         """
-        return Milter.CONTINUE
+        self.addheader(
+                "X-PGPMilter", "Scanned by PGPMilter %s" % __version__ , -1)
+        return Milter.ACCEPT
 
     def close(self):
         """Called when connection is closed.
@@ -138,7 +140,7 @@ def run(name, sock, timeout=300):
     """Start a milter loop.
     """
     Milter.factory = PGPMilter
-    Milter.set_flags(Milter.CHGHDRS + Milter.ADDHDRS + Milter.CHGBODY)
+    Milter.set_flags(Milter.ADDHDRS + Milter.CHGBODY)
     Milter.runmilter(name, sock, timeout=timeout)
 
 
