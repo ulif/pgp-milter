@@ -2,6 +2,7 @@ import pgp_milter
 import pkg_resources
 import pytest
 import Milter.testctx
+from Milter.test import TestBase as MilterTestBase
 from pgp_milter import (
     __version__,
     handle_options,
@@ -58,6 +59,11 @@ def test_pgp_milter_constructable():
     assert isinstance(m, PGPMilter)
 
 
+class PGPTestMilter(MilterTestBase, PGPMilter):
+    def __init__(self):
+        MilterTestBase.__init__(self, logfile="milter.log")
+
+
 class TestPGPMilter(object):
     def test_create(self):
         # we can create PGPMilters
@@ -105,6 +111,15 @@ class TestPGPMilter(object):
         assert b"X-Foo" in ctx.getpriv().fp.getvalue()
         ctx._envfrom("bar@baz")
         assert b"X-Foo" not in ctx.getpriv().fp.getvalue()
+
+    def test_x_pgpmilter_header_added(self):
+        # the X-PGPMilter header is added during eom()
+        milter = PGPTestMilter()
+        assert milter.connect() == Milter.CONTINUE
+        with open("tests/sample_body1.txt", "rb") as fp:
+            rc = milter.feedFile(fp)
+            assert rc == Milter.ACCEPT
+        assert "X-PGPMilter" in milter._msg.keys()
 
     def test_close_closes_also_fp(self):
         # the local filepointer is closed then the connection closes.
