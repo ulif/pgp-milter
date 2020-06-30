@@ -103,7 +103,7 @@ class TestPGPMilter(object):
         # the X-PGPMilter header is added during eom()
         milter = PGPTestMilter()
         assert milter.connect() == Milter.CONTINUE
-        with open("tests/sample_body1.txt", "rb") as fp:
+        with open("tests/samples/full-mail01", "rb") as fp:
             rc = milter.feedFile(fp)
             assert rc == Milter.ACCEPT
         assert "X-PGPMilter" in milter._msg.keys()
