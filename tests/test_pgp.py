@@ -56,7 +56,7 @@ def test_parse_raw():
         ),
         (b"Status", b"O"),
     ]
-    body = open("tests/sample_body1.txt", "rb").read().split(b"\n\n\n")[-1]
+    body = open("tests/samples/full-mail01", "rb").read().split(b"\n\n\n")[-1]
     parsed = pgp.parse_raw(headers, body)
     assert isinstance(parsed, Message)
 
@@ -114,6 +114,6 @@ def test_pgp_mime_encrypt(tmpdir):
     result = pgp.pgp_mime_encrypt(gpg, mime_msg, FPR_ALICE)
     result.set_boundary("===============1111111111111111111==")
     expected = replace_pgp_msg(
-        open("tests/sample_mime_enc_body.txt", "r").read()
+        open("tests/samples/mime-enc-body", "r").read()
     )
     assert replace_pgp_msg(result.as_string()) == expected
