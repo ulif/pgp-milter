@@ -11,6 +11,13 @@ from pgp_milter import (
 )
 
 
+class PGPTestMilter(MilterTestBase, PGPMilter):
+    """A test milter wrapping PGPMilter
+    """
+    def __init__(self):
+        MilterTestBase.__init__(self, logfile="milter.log")
+
+
 def test_importable():
     # we can import pgp_milter
     assert pgp_milter is not None
@@ -57,11 +64,6 @@ def test_pgp_milter_constructable():
     m = PGPMilter()
     assert hasattr(m, "_id")
     assert isinstance(m, PGPMilter)
-
-
-class PGPTestMilter(MilterTestBase, PGPMilter):
-    def __init__(self):
-        MilterTestBase.__init__(self, logfile="milter.log")
 
 
 class TestPGPMilter(object):
