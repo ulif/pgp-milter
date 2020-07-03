@@ -125,7 +125,7 @@ class PGPMilter(Milter.Base):
         """Called when end of message is reached.
         """
         self.addheader(
-                "X-PGPMilter", "Scanned by PGPMilter %s" % __version__ , -1)
+                "X-PGPMilter", "Scanned by PGPMilter %s" % __version__, -1)
         return Milter.ACCEPT
 
     def close(self):
