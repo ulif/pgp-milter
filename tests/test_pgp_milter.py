@@ -34,6 +34,7 @@ def test_handle_options_defaults():
     # we can expect sensible defaults set
     args = handle_options([])
     assert args.version is False
+    assert args.debug is False
 
 
 def test_handle_options_version():
