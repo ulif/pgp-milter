@@ -37,6 +37,13 @@ def test_handle_options_defaults():
     assert args.debug is False
 
 
+def test_handle_options_debug():
+    # we can enable debug mode
+    assert handle_options([]).debug is False
+    assert handle_options(["-d"]).debug is True
+    assert handle_options(["--debug"]).debug is True
+
+
 def test_handle_options_version():
     # we support `--version'
     assert handle_options(["--version"]).version is True
