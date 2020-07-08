@@ -45,6 +45,15 @@ def test_handle_options_debug():
     assert handle_options(["--debug"]).debug is True
 
 
+def test_handle_options_socket():
+    # we can set a connection socket to bind to
+    assert handle_options([]).socket == "inet6:30072@[::1]"
+    assert handle_options(
+        ["-s=inet:6666@1.1.1.1"]).socket == "inet:6666@1.1.1.1"
+    assert handle_options(
+        ["--socket=inet:6666@1.1.1.1"]).socket == "inet:6666@1.1.1.1"
+
+
 def test_handle_options_version():
     # we support `--version'
     assert handle_options(["--version"]).version is True
