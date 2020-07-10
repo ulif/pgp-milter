@@ -1,5 +1,4 @@
 import pgp_milter
-import pkg_resources
 import pytest
 import Milter.testctx
 from Milter.test import TestBase as MilterTestBase
@@ -9,6 +8,10 @@ from pgp_milter import (
     main,
     PGPMilter,
 )
+try:
+    import importlib.metadata as importlib_metadata
+except ImportError:  # Python < 3.8 # NOQA  # pragma: no cover
+    import importlib_metadata
 
 
 class PGPTestMilter(MilterTestBase, PGPMilter):
@@ -26,7 +29,7 @@ def test_importable():
 def test_version():
     # assure versions in setup.py and package match
     v1 = __version__
-    v2 = pkg_resources.get_distribution("pgp_milter").version
+    v2 = importlib_metadata.version("pgp_milter")
     assert v1 == v2
 
 
