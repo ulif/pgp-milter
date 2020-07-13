@@ -1,0 +1,17 @@
+Return-Path: <ulif@tigger>
+Received: from sample.org ([127.0.0.1])
+        by localhost (sample.org [127.0.0.1])
+        with ESMTP id GNoU4Pt6S_-2 for <honey@sample.org>;
+        Tue, 30 Apr 2019 21:21:29 +0200 (CEST)
+Date: Tue, 30 Apr 2019 21:21:28 +0200
+From: Alter Ego <ulif@tigger>
+To: honey@sample.org
+Subject: Subject
+Message-ID: <20190430211128.h24b7qbx7evr4sdz@tigger>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20171215
+
+foo bar baz
+
