@@ -51,3 +51,17 @@ def pgp_mime_encrypt(gpg_env, mime_msg, fpr):
 
 def as_mime(text):
     return email.mime.text.MIMEText(_text=text)
+
+
+def get_encryptable_payload(fp):
+    """Get the 'inner' content of a message.
+
+    I.e. the part that should be encrypted, when outward bound.
+    Returns an `email.Message` object.
+    """
+    msg = Parser(policy=default).parse(fp)
+    for k in msg.keys():  # remove headers not "encrypted".
+        if k.startswith("Content-"):
+            continue
+        del msg[k]
+    return msg
