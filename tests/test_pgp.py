@@ -117,3 +117,11 @@ def test_pgp_mime_encrypt(tmpdir):
         open("tests/samples/mime-enc-body", "r").read()
     )
     assert replace_pgp_msg(result.as_string()) == expected
+
+
+def test_get_encryptable_payload():
+    # we can extract the encryptable part of a message
+    fp = open("tests/samples/full-mail02", "r")
+    result = pgp.get_encryptable_payload(fp)
+    want = open("tests/samples/payload02").read()
+    assert result.as_string() == want
