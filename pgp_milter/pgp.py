@@ -53,17 +53,12 @@ def as_mime(text):
     return email.mime.text.MIMEText(_text=text)
 
 
-def get_encryptable_payload(fp):
+def get_encryptable_payload(msg):
     """Get the 'inner' content of a message.
 
-    I.e. the part that should be encrypted, when outward bound.
-    Returns an `email.message.EmailMessage` object. The returned message object
-    can be turned into a string (`as_string()) and be passed to gpg for
-    encryption.
-
-    The file pointer `fp` is expected to be openen in text mode.
+    I.e. the part that should be encrypted when outward bound. Expects and
+    returns an `email.message.EmailMessage` object.
     """
-    msg = Parser(policy=default).parse(fp)
     for k in msg.keys():  # remove headers not "encrypted".
         if k.startswith("Content-"):
             continue
