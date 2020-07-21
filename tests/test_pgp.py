@@ -5,6 +5,8 @@
 import re
 import gnupg
 from email.message import Message
+from email.parser import Parser
+from email.policy import default as default_policy
 from pgp_milter import pgp
 
 
@@ -122,6 +124,7 @@ def test_pgp_mime_encrypt(tmpdir):
 def test_get_encryptable_payload():
     # we can extract the encryptable part of a message
     fp = open("tests/samples/full-mail02", "r")
-    result = pgp.get_encryptable_payload(fp)
+    msg = Parser(policy=default_policy).parse(fp)
+    result = pgp.get_encryptable_payload(msg)
     want = open("tests/samples/payload02").read()
     assert result.as_string() == want
