@@ -6,7 +6,7 @@ import email.mime.text
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.parser import Parser
-from email.policy import default
+from email.policy import default as default_policy
 
 
 def parse_raw(headers, body):
@@ -15,7 +15,7 @@ def parse_raw(headers, body):
     """
     str_headers = b"\n".join([b"%s: %s" % (k, v) for k, v in headers])
     raw_msg = "%s\n\n\n%s" % (str_headers.decode(), body.decode())
-    return Parser(policy=default).parsestr(raw_msg)
+    return Parser(policy=default_policy).parsestr(raw_msg)
 
 
 def gpg_encrypt(gpg_env, text, fpr):
