@@ -29,7 +29,8 @@ def pgp_mime_encrypt(gpg_env, mime_msg, fpr):
 
     The returned multipart MIME container should conform to RFC 3156.
     """
-    enc_msg = gpg_encrypt(gpg_env, mime_msg.as_string(), fpr)
+    to_encrypt = get_encryptable_payload(mime_msg)
+    enc_msg = gpg_encrypt(gpg_env, to_encrypt.as_string(), fpr)
     multipart_container = MIMEMultipart(
         "encrypted", protocol="application/pgp-encrypted"
     )
