@@ -63,7 +63,7 @@ def get_encryptable_payload(msg):
     returns an `email.message.EmailMessage` object.
     """
     for k in msg.keys():  # remove headers not "encrypted".
-        if k.startswith("Content-"):
+        if k.lower().startswith("content-"):
             continue
         del msg[k]
     return msg
