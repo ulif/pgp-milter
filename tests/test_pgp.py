@@ -121,7 +121,6 @@ def test_pgp_mime_encrypt(tmpdir):
     assert replace_pgp_msg(result.as_string()) == expected
 
 
-
 def test_pgp_mime_encrypt_fullmail(tmpdir):
     # we can encrypt a complete message
     gpg = gnupg.GPG(gnupghome=str(tmpdir))
@@ -135,7 +134,6 @@ def test_pgp_mime_encrypt_fullmail(tmpdir):
         "Content-Disposition"]
     assert "multipart/encrypted" in result.as_string()
     assert "BEGIN PGP MESSAGE" in result.as_string()
-
 
 
 def test_get_encryptable_payload():
