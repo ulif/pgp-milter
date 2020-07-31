@@ -143,3 +143,12 @@ def test_get_encryptable_payload():
     result = pgp.get_encryptable_payload(msg)
     want = open("tests/samples/payload02").read()
     assert result.as_string() == want
+
+
+def test_prepend_headerfields():
+    # we can inject headerfields
+    msg = Parser(policy=default_policy).parsestr(
+        "To: foo\nSubject: bar\n\nMeet at dawni\n")
+    msg.add_header("X-Foo", "baz")
+    result = pgp.prepend_header_fields(msg, [("To", "foo"), ("From", "bar")])
+    assert result.keys() == ["From", "To", "Subject", "X-Foo"]
