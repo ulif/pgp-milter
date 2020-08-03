@@ -59,6 +59,7 @@ class PGPMilter(Milter.Base):
 
         self.fp = None
         self.headers_seen = []
+        self.rcpts = []
 
     @Milter.noreply
     def connect(self, ip_name, family, hostaddr):
@@ -87,12 +88,14 @@ class PGPMilter(Milter.Base):
             self.fp.close()
         self.headers_seen = []
         self.fp = BytesIO()
+        self.rcpts = []     # reset list of recipients
         return Milter.CONTINUE
 
     @Milter.noreply
     def envrcpt(self, name, *strings):
         """Called ON RCPT TO.
         """
+        self.rcpts.append(name)
         return Milter.CONTINUE
 
     @Milter.noreply
