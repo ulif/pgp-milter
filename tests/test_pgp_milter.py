@@ -122,6 +122,17 @@ class TestPGPMilter(object):
         ctx._envfrom("bar@baz")
         assert b"X-Foo" not in ctx.getpriv().fp.getvalue()
 
+    def test_envrcpt_stores_recipients(self):
+        # we store all recipients sent by RCPT TO
+        ctx = Milter.testctx.TestCtx()
+        Milter.factory = PGPMilter
+        ctx._connect()
+        ctx._envfrom("<foo@bar>")
+        rc1 = ctx._envrcpt("<bar@bar>")
+        rc2 = ctx._envrcpt("<baz@bar>")
+        assert rc1 == rc2 == Milter.CONTINUE
+        assert ctx.getpriv().rcpts == ["<bar@bar>", "<baz@bar>"]
+
     def test_x_pgpmilter_header_added(self):
         # the X-PGPMilter header is added during eom()
         milter = PGPTestMilter()
