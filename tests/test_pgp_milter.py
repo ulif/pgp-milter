@@ -133,6 +133,13 @@ class TestPGPMilter(object):
         assert rc1 == rc2 == Milter.CONTINUE
         assert ctx.getpriv().rcpts == ["<bar@bar>", "<baz@bar>"]
 
+    def test_envrcpt_list_empty_on_beginning(self):
+        # at the beginning the recipients list is empty
+        ctx = Milter.testctx.TestCtx()
+        Milter.factory = PGPMilter
+        ctx._connect()
+        assert ctx.getpriv().rcpts == []
+
     def test_x_pgpmilter_header_added(self):
         # the X-PGPMilter header is added during eom()
         milter = PGPTestMilter()
