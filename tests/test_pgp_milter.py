@@ -140,6 +140,17 @@ class TestPGPMilter(object):
         ctx._connect()
         assert ctx.getpriv().rcpts == []
 
+    def test_envrcpt_reset_on_mailfrom(self):
+        # on MAIL FROM, any recipients are removed
+        ctx = Milter.testctx.TestCtx()
+        Milter.factory = PGPMilter
+        ctx._connect()
+        ctx._envfrom("<foo@bar>")
+        ctx._envrcpt("<bar@bar>")
+        assert ctx.getpriv().rcpts == ["<bar@bar>"]
+        ctx._envfrom("<foo@bar>")
+        assert ctx.getpriv().rcpts == []
+
     def test_x_pgpmilter_header_added(self):
         # the X-PGPMilter header is added during eom()
         milter = PGPTestMilter()
