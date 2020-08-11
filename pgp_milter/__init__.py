@@ -134,6 +134,7 @@ class PGPMilter(Milter.Base):
     def close(self):
         """Called when connection is closed.
         """
+        self.rcpts = []
         if self.fp:
             self.fp.close()
         return Milter.CONTINUE
