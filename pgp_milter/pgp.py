@@ -52,10 +52,6 @@ def pgp_mime_encrypt(gpg_env, mime_msg, fpr):
     return multipart_container
 
 
-def as_mime(text):
-    return email.mime.text.MIMEText(_text=text)
-
-
 def get_encryptable_payload(msg):
     """Get the 'inner' content of a message.
 
