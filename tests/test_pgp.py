@@ -4,6 +4,7 @@
 #
 import re
 import gnupg
+from email.mime.text import MIMEText
 from email.message import Message
 from email.parser import Parser
 from email.policy import default as default_policy
@@ -84,35 +85,11 @@ def test_gpg_encrypt_multiple_recipients(tmpdir):
     assert len(str(msg)) >= 1000
 
 
-def test_as_mime():
-    # we can turn text into MIMEtext
-    result = pgp.as_mime("meet me at dawn")
-    assert result.as_string() == (
-        'Content-Type: text/plain; charset="us-ascii"\n'
-        "MIME-Version: 1.0\n"
-        "Content-Transfer-Encoding: 7bit\n"
-        "\n"
-        "meet me at dawn"
-    )
-
-
-def test_as_mime_utf8():
-    # MIME encoder can handle utf8
-    result = pgp.as_mime("Cäsar")
-    assert result.as_string() == (
-        'Content-Type: text/plain; charset="utf-8"\n'
-        "MIME-Version: 1.0\n"
-        "Content-Transfer-Encoding: base64\n"
-        "\n"
-        "Q8Okc2Fy\n"
-    )
-
-
 def test_pgp_mime_encrypt(tmpdir):
     # we can create PGP-MIME messages from MIME
     gpg = gnupg.GPG(gnupghome=str(tmpdir))
     gpg.import_keys(open("tests/alice.pub", "r").read())
-    mime_msg = pgp.as_mime("meet me at dawn")
+    mime_msg = MIMEText(_text="meet me at dawn")
     result = pgp.pgp_mime_encrypt(gpg, mime_msg, FPR_ALICE)
     result.set_boundary("===============1111111111111111111==")
     expected = replace_pgp_msg(
