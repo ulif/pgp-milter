@@ -8,6 +8,7 @@ from pgp_milter import (
     main,
     PGPMilter,
 )
+from pgp_milter import run as run_main
 try:
     import importlib.metadata as importlib_metadata
 except ImportError:  # Python < 3.8 # NOQA  # pragma: no cover
@@ -61,6 +62,17 @@ def test_handle_options_version():
     # we support `--version'
     assert handle_options(["--version"]).version is True
     assert handle_options([]).version is False
+
+
+def test_run(monkeypatch):
+    # we can run milters
+    def mock_runmilter(name, sock, timeout=300):
+        Milter._mock_vals = [name, sock, timeout]
+    monkeypatch.setattr("Milter.runmilter", mock_runmilter)
+    result = run_main("testmilter", "inet6:[::1]")
+    assert Milter.factory == PGPMilter
+    assert Milter._mock_vals == ["testmilter", "inet6:[::1]", 300]
+    assert result is None
 
 
 def test_main_version(capsys):
