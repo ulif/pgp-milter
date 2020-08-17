@@ -92,6 +92,18 @@ def test_main_sys_argv_considered(capsys, monkeypatch):
     assert str(__version__) in out
 
 
+def test_main_calls_run(monkeypatch):
+    # calling main w/o args will call `run`
+    def mock_runmilter(name, sock, timeout=300):
+        Milter._mock_vals = [name, sock, timeout]
+    monkeypatch.setattr("Milter.runmilter", mock_runmilter)
+    monkeypatch.setattr("Milter._mock_vals", [])
+    result = main()
+    assert Milter.factory == PGPMilter
+    assert Milter._mock_vals == ["pgpmilter", "inet6:30072@[::1]", 300]
+    assert result is None
+
+
 def test_pgp_milter_constructable():
     # we can create PGPMilters
     m = PGPMilter()
