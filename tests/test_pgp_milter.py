@@ -69,7 +69,7 @@ def test_run(monkeypatch):
     def mock_runmilter(name, sock, timeout=300):
         Milter._mock_vals = [name, sock, timeout]
     monkeypatch.setattr("Milter.runmilter", mock_runmilter)
-    monkeypatch.setattr("Milter._mock_vals", [])
+    monkeypatch.setattr("Milter._mock_vals", [], raising=False)
     result = run_main("testmilter", "inet6:2323@[::1]")
     assert Milter.factory == PGPMilter
     assert Milter._mock_vals == ["testmilter", "inet6:2323@[::1]", 300]
@@ -98,7 +98,7 @@ def test_main_calls_run(monkeypatch):
     def mock_runmilter(name, sock, timeout=300):
         Milter._mock_vals = [name, sock, timeout]
     monkeypatch.setattr("Milter.runmilter", mock_runmilter)
-    monkeypatch.setattr("Milter._mock_vals", [])
+    monkeypatch.setattr("Milter._mock_vals", [], raising=False)
     result = main()
     assert Milter.factory == PGPMilter
     assert Milter._mock_vals == ["pgpmilter", "inet6:30072@[::1]", 300]
