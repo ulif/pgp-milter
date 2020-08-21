@@ -80,3 +80,11 @@ def prepend_header_fields(msg, headers):
             del msg[k]
         msg.add_header(k, v)
     return msg
+
+def encrypt_msg(msg, recipients, gpg_env_path=None):
+    """Encrypt `msg` for `recipients` with gpg-env in `gpg_env_path`.
+
+    Returns, whether changes happened and (possibly changed) message created.
+    """
+    changed = False
+    return (changed, msg)
