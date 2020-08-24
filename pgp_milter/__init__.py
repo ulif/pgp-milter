@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+import mime
 import sys
 import Milter
 from argparse import ArgumentParser
 from io import BytesIO
+from pgp_milter.pgp import encrypt_msg
 
 
 __version__ = "0.1.dev0"  # set also in setup.py
@@ -129,6 +131,17 @@ class PGPMilter(Milter.Base):
         """
         self.addheader(
                 "X-PGPMilter", "Scanned by PGPMilter %s" % __version__, -1)
+        self.fp.seek(0)
+        msg = mime.message_from_file(self.fp)
+        changed, msg = pgp.encrypt_msg(msg, self.rcpts)
+        if not changed:
+            return Milter.ACCEPT
+        fp = BytesIO(msg.as_bytes().split(b'\n\n', 1)[1])
+        while True:
+            buf = fp.read(8192)
+            if len(buf) == 0:
+                break
+            self.replacebody(buf)
         return Milter.ACCEPT
 
     def close(self):
