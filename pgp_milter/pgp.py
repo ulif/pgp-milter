@@ -81,6 +81,7 @@ def prepend_header_fields(msg, headers):
         msg.add_header(k, v)
     return msg
 
+
 def encrypt_msg(msg, recipients, gpg_env_path=None):
     """Encrypt `msg` for `recipients` with gpg-env in `gpg_env_path`.
 
