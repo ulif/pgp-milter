@@ -2,11 +2,14 @@
 #
 # OpenPGP related stuff
 #
+import gnupg
 import email.mime.text
+import os.path
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.parser import Parser
 from email.policy import default as default_policy
+from email.utils import parseaddr
 
 
 def parse_raw(headers, body):
@@ -82,10 +85,38 @@ def prepend_header_fields(msg, headers):
     return msg
 
 
+def get_fingerprints(gpg_env, recipients):
+    """Get the recipients fingerprints.
+
+    We only return those fingerprints, that match passed email addresses
+    completely and at most one fingerprint per given email.
+    """
+    if not isinstance(recipients, list):
+        recipients = list(recipents)
+    email_addrs = [parseaddr(x)[1] for x in recipients]
+    result = []
+    for addr in email_addrs:
+        addr_results = []
+        gpg_keys = gpg_env.list_keys(keys=[addr])
+        for gpg_key in gpg_keys:
+            for uid in gpg_key["uids"]:
+                name, uid_addr = parseaddr(uid)
+                if uid_addr == addr:
+                    addr_results.append(gpg_key)
+                    break
+        if len(addr_results):
+            result.append(sorted(addr_results, key=lambda x: x['created'])[0]["fingerprint"])
+    return result
+
+
 def encrypt_msg(msg, recipients, gpg_env_path=None):
     """Encrypt `msg` for `recipients` with gpg-env in `gpg_env_path`.
 
     Returns, whether changes happened and (possibly changed) message created.
     """
     changed = False
-    return (changed, msg)
+    if gpg_env_path is None or not os.path.isdir(gpg_env_path):
+        return changed, msg
+    gpg = gnupg.GPG(gnupghome=gpg_env_path)
+    fprs = get_fingerprints(gpg, recipients)
+    return (True, msg)
