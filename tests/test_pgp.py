@@ -129,3 +129,9 @@ def test_prepend_headerfields():
     msg.add_header("X-Foo", "baz")
     result = pgp.prepend_header_fields(msg, [("To", "foo"), ("From", "bar")])
     assert result.keys() == ["From", "To", "Subject", "X-Foo"]
+
+
+def test_get_fingerprints(tmpdir):
+    gpg = gnupg.GPG(gnupghome=str(tmpdir))
+    result1 = pgp.get_fingerprints(gpg, ["alice@sample.net", "bob@sample.org"])
+    assert result1 == []
