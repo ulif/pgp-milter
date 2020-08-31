@@ -131,7 +131,16 @@ def test_prepend_headerfields():
     assert result.keys() == ["From", "To", "Subject", "X-Foo"]
 
 
-def test_get_fingerprints(tmpdir):
+def test_get_fingerprints_no_match(tmpdir):
+    # we find only existing fingerprints
     gpg = gnupg.GPG(gnupghome=str(tmpdir))
     result1 = pgp.get_fingerprints(gpg, ["alice@sample.net", "bob@sample.org"])
     assert result1 == []
+
+
+def test_get_fingerprints_one_match(tmpdir):
+    # we find a fingerprint, if it is stored
+    gpg = gnupg.GPG(gnupghome=str(tmpdir))
+    gpg.import_keys(open("tests/alice.pub", "r").read())
+    result1 = pgp.get_fingerprints(gpg, ["alice@sample.net", "bob@sample.org"])
+    assert result1 == [FPR_ALICE]
