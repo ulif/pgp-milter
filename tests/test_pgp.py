@@ -144,3 +144,12 @@ def test_get_fingerprints_one_match(tmpdir):
     gpg.import_keys(open("tests/alice.pub", "r").read())
     result1 = pgp.get_fingerprints(gpg, ["alice@sample.net", "bob@sample.org"])
     assert result1 == [FPR_ALICE]
+
+
+def test_get_fingerprints_string_input(tmpdir):
+    # we find a fingerprint also if we pass it as string
+    # and not a list of strings
+    gpg = gnupg.GPG(gnupghome=str(tmpdir))
+    gpg.import_keys(open("tests/alice.pub", "r").read())
+    result1 = pgp.get_fingerprints(gpg, "alice@sample.net")
+    assert result1 == [FPR_ALICE]
