@@ -92,7 +92,7 @@ def get_fingerprints(gpg_env, recipients):
     completely and at most one fingerprint per given email.
     """
     if not isinstance(recipients, list):
-        recipients = list(recipents)
+        recipients = [recipients]
     email_addrs = [parseaddr(x)[1] for x in recipients]
     result = []
     for addr in email_addrs:
