@@ -105,7 +105,9 @@ def get_fingerprints(gpg_env, recipients):
                     addr_results.append(gpg_key)
                     break
         if len(addr_results):
-            result.append(sorted(addr_results, key=lambda x: x['date'])[-1]["fingerprint"])
+            result.append(
+                sorted(
+                    addr_results, key=lambda x: x['date'])[-1]["fingerprint"])
     return result
 
 
