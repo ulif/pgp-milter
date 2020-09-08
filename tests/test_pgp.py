@@ -12,8 +12,9 @@ from pgp_milter import pgp
 
 
 # PGP fingerprints
-FPR_ALICE = "FC576D66A075141F41770B15F028476ACE63FE41"
-FPR_BOB = "FDBE48E6FE58D021A5C8BE3B982AD46FA8789D5C"
+FPR_ALICE  = "FC576D66A075141F41770B15F028476ACE63FE41"
+FPR_ALICE2 = "BC8E0FFE80B27CAB91D6D2315B1D44F70BA91072"
+FPR_BOB    = "FDBE48E6FE58D021A5C8BE3B982AD46FA8789D5C"
 
 
 def replace_pgp_msg(text):
@@ -153,3 +154,15 @@ def test_get_fingerprints_string_input(tmpdir):
     gpg.import_keys(open("tests/alice.pub", "r").read())
     result1 = pgp.get_fingerprints(gpg, "alice@sample.net")
     assert result1 == [FPR_ALICE]
+
+
+def test_get_fingerprints_overlapping_names(tmpdir):
+    # we only find exactly matching fingerprints
+    gpg = gnupg.GPG(gnupghome=str(tmpdir))
+    # the key of "alice@sample.net"
+    gpg.import_keys(open("tests/alice.pub", "r").read())
+    # this is the key of "thealice@sample.net"
+    gpg.import_keys(open("tests/alice2.pub", "r").read())
+    assert [FPR_ALICE] == pgp.get_fingerprints(gpg, "alice@sample.net")
+    assert [FPR_ALICE2] == pgp.get_fingerprints(gpg, "thealice@sample.net")
+
