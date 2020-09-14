@@ -121,4 +121,7 @@ def encrypt_msg(msg, recipients, gpg_env_path=None):
         return changed, msg
     gpg = gnupg.GPG(gnupghome=gpg_env_path)
     fprs = get_fingerprints(gpg, recipients)
-    return (True, msg)
+    if not len(fprs) == len(recipients):
+        return False, msg
+    new_msg = pgp_mime_encrypt(gpg, msg, fprs)
+    return (True, new_msg)
