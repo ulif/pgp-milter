@@ -97,6 +97,7 @@ def test_main_calls_run(monkeypatch):
     # calling main w/o args will call `run`
     def mock_runmilter(name, sock, timeout=300):
         Milter._mock_vals = [name, sock, timeout]
+    monkeypatch.setattr("sys.argv", ["scriptname"])
     monkeypatch.setattr("Milter.runmilter", mock_runmilter)
     monkeypatch.setattr("Milter._mock_vals", [], raising=False)
     result = main()
