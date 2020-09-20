@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import pathlib
 from configparser import ConfigParser
 
 
@@ -8,4 +9,11 @@ OPTIONS_DEFAULTS = dict(
 )
 
 
-
+def config_paths():
+    """Paths, where we look for config files.
+    """
+    return [
+        pathlib.Path("pgpmilter.cfg").absolute(),
+        pathlib.Path(pathlib.Path.home(), ".pgpmilter.cfg").absolute(),
+        pathlib.Path("/etc/pgpmilter.cfg").absolute()
+        ]
