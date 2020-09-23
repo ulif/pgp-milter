@@ -13,7 +13,7 @@ def config_paths():
     """Paths, where we look for config files.
     """
     return [
-        pathlib.Path("pgpmilter.cfg").absolute(),
+        pathlib.Path("/etc/pgpmilter.cfg").absolute(),
         pathlib.Path(pathlib.Path.home(), ".pgpmilter.cfg").absolute(),
-        pathlib.Path("/etc/pgpmilter.cfg").absolute()
+        pathlib.Path("pgpmilter.cfg").absolute(),
         ]
