@@ -17,3 +17,20 @@ def config_paths():
         pathlib.Path(pathlib.Path.home(), ".pgpmilter.cfg").absolute(),
         pathlib.Path("pgpmilter.cfg").absolute(),
         ]
+
+
+def get_config_dict():
+    result = dict(OPTIONS_DEFAULTS)
+    parser = ConfigParser()
+    parser.read_dict({"pgpmilter": OPTIONS_DEFAULTS})
+    found = parser.read(config_paths())
+    for key, val in OPTIONS_DEFAULTS.items():
+        if not parser.has_option("pgpmilter", key):
+            continue
+        if isinstance(val, bool):
+            result[key] = parser.getboolean("pgpmilter", key)
+        elif isinstance(val, int):
+            result[key] = parser.getint("pgpmilter", key)
+        else:
+            result[key] = parser.get("pgpmilter", key).strip("\"'")
+    return result
