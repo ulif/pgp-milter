@@ -19,7 +19,6 @@ def test_config_paths_are_absolute():
 
 
 def test_get_config_dict(home_dir, monkeypatch):
-    # os.chdir(home_dir)
     conf_path1 = home_dir / "pgpmilter1.conf"
     conf_path2 = home_dir / "pgpmilter2.conf"
     def fake_config_dict():
@@ -29,3 +28,15 @@ def test_get_config_dict(home_dir, monkeypatch):
     conf_path2.write("[pgpmilter]\nsocket = bar\n")
     result = get_config_dict()
     assert result == {'debug': True, 'socket': 'bar'}
+
+
+def test_get_config_reads_in_right_order(home_dir):
+    # the config files are read in right order.
+    # ./pgpmilter.cfg overrides ~/.pgpmilter.cfg overrides /etc/pgpmilter.cfg
+    path1 = home_dir / "pgpmilter.cfg"
+    path2 = home_dir / ".pgpmilter.cfg"
+    assert get_config_dict()["socket"] == OPTIONS_DEFAULTS["socket"]
+    path2.write("[pgpmilter]\nsocket = bat\n")
+    assert get_config_dict()["socket"] == "bat"
+    path1.write("[pgpmilter]\nsocket = baz\n")
+    assert get_config_dict()["socket"] == "baz"
