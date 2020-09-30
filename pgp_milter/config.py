@@ -20,6 +20,12 @@ def config_paths():
 
 
 def get_config_dict():
+    """Get a dict representing the config.
+
+    All configuration values can be set in config files. We look in the
+    locations given by `config_paths` and return a dict representing the
+    default values or respective custom values.
+    """
     result = dict(OPTIONS_DEFAULTS)
     parser = ConfigParser()
     parser.read_dict({"pgpmilter": OPTIONS_DEFAULTS})
