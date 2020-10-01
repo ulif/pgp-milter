@@ -10,6 +10,7 @@ def home_dir(request, monkeypatch, tmpdir):
     tmpdir.mkdir("home")
     monkeypatch.setenv("HOME", str(tmpdir / "home"))
     os.chdir(str(tmpdir / "home"))
+
     def teardown():
         os.chdir(_old_cwd)
     request.addfinalizer(teardown)
