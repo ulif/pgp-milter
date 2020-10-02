@@ -1,5 +1,3 @@
-import os
-import pathlib
 from pgp_milter.config import (
     OPTIONS_DEFAULTS,
     config_paths,
@@ -21,6 +19,7 @@ def test_config_paths_are_absolute():
 def test_get_config_dict(home_dir, monkeypatch):
     conf_path1 = home_dir / "pgpmilter1.conf"
     conf_path2 = home_dir / "pgpmilter2.conf"
+
     def fake_config_dict():
         return [conf_path1, conf_path2]
     monkeypatch.setattr("pgp_milter.config.config_paths", fake_config_dict)
