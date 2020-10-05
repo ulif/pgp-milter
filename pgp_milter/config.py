@@ -29,7 +29,7 @@ def get_config_dict():
     result = dict(OPTIONS_DEFAULTS)
     parser = ConfigParser()
     parser.read_dict({"pgpmilter": OPTIONS_DEFAULTS})
-    found = parser.read(config_paths())
+    parser.read(config_paths())
     for key, val in OPTIONS_DEFAULTS.items():
         if not parser.has_option("pgpmilter", key):
             continue
