@@ -4,7 +4,7 @@ from configparser import ConfigParser
 
 
 OPTIONS_DEFAULTS = dict(
-    socket="inet6:12345@localhost",
+    socket="inet6:30072@[::1]",
     debug=False,
 )
 
