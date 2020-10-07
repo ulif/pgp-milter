@@ -4,6 +4,7 @@ import sys
 import Milter
 from argparse import ArgumentParser
 from io import BytesIO
+from pgp_milter.config import get_config_dict
 from pgp_milter.pgp import encrypt_msg
 
 
@@ -25,6 +26,7 @@ def print_version():
 def handle_options(args):
     """Handle commandline arguments.
     """
+    defaults = get_config_dict()
     parser = ArgumentParser(
         description=(
             "Mail filter for PGP-encrypting/decrypting mails on the fly"
@@ -45,6 +47,7 @@ def handle_options(args):
         action="store_true",
         help="output version information and exit.",
     )
+    parser.set_defaults(**defaults)
     args = parser.parse_args(args)
     return args
 
