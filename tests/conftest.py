@@ -2,7 +2,7 @@ import os
 import pytest
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="function", autouse=True)
 def home_dir(request, monkeypatch, tmpdir):
     """Provide a temporary user home.
     """
