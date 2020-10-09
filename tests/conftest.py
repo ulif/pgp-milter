@@ -1,5 +1,16 @@
 import os
+import pathlib
 import pytest
+
+
+PATH_OF_TESTS = pathlib.Path(__file__).parent
+
+
+@pytest.fixture()
+def tpath():
+    """A fixture providing the path to tests.
+    """
+    return PATH_OF_TESTS
 
 
 @pytest.fixture(scope="function", autouse=True)
