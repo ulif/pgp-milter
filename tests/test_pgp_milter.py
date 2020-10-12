@@ -14,6 +14,9 @@ try:
 except ImportError:  # Python < 3.8 # NOQA  # pragma: no cover
     import importlib_metadata
 
+import pathlib
+TESTS = pathlib.Path(__file__).parent
+
 
 class PGPTestMilter(MilterTestBase, PGPMilter):
     """A test milter wrapping PGPMilter
@@ -199,11 +202,11 @@ class TestPGPMilter(object):
         ctx._abort()
         assert ctx.getpriv().rcpts == []
 
-    def test_x_pgpmilter_header_added(self):
+    def test_x_pgpmilter_header_added(self, tpath):
         # the X-PGPMilter header is added during eom()
         milter = PGPTestMilter()
         assert milter.connect() == Milter.CONTINUE
-        with open("tests/samples/full-mail01", "rb") as fp:
+        with (tpath / "samples" / "full-mail01").open("rb") as fp:
             rc = milter.feedFile(fp)
             assert rc == Milter.ACCEPT
         assert "X-PGPMilter" in milter._msg.keys()
