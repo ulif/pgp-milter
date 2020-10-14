@@ -87,15 +87,15 @@ def test_gpg_encrypt_multiple_recipients(tmpdir, tpath):
     assert len(str(msg)) >= 1000
 
 
-def test_pgp_mime_encrypt(tmpdir):
+def test_pgp_mime_encrypt(tmpdir, tpath):
     # we can create PGP-MIME messages from MIME
     gpg = gnupg.GPG(gnupghome=str(tmpdir))
-    gpg.import_keys(open("tests/alice.pub", "r").read())
+    gpg.import_keys((tpath / "alice.pub").read_text())
     mime_msg = MIMEText(_text="meet me at dawn")
     result = pgp.pgp_mime_encrypt(gpg, mime_msg, FPR_ALICE)
     result.set_boundary("===============1111111111111111111==")
     expected = replace_pgp_msg(
-        open("tests/samples/mime-enc-body", "r").read()
+        (tpath / "samples/mime-enc-body").read_text()
     )
     assert replace_pgp_msg(result.as_string()) == expected
 
