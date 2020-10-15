@@ -100,12 +100,12 @@ def test_pgp_mime_encrypt(tmpdir, tpath):
     assert replace_pgp_msg(result.as_string()) == expected
 
 
-def test_pgp_mime_encrypt_fullmail(tmpdir):
+def test_pgp_mime_encrypt_fullmail(tmpdir, tpath):
     # we can encrypt a complete message
     gpg = gnupg.GPG(gnupghome=str(tmpdir))
-    gpg.import_keys(open("tests/alice.pub", "r").read())
-    fp = open("tests/samples/full-mail02")
-    msg = Parser(policy=default_policy).parse(fp)
+    gpg.import_keys((tpath / "alice.pub").read_text())
+    with (tpath / "samples/full-mail02").open() as fp:
+        msg = Parser(policy=default_policy).parse(fp)
     result = pgp.pgp_mime_encrypt(gpg, msg, FPR_ALICE)
     assert result.keys() == [
         "Return-Path", "Received", "Date", "From", "To", "Subject",
