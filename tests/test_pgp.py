@@ -115,12 +115,12 @@ def test_pgp_mime_encrypt_fullmail(tmpdir, tpath):
     assert "BEGIN PGP MESSAGE" in result.as_string()
 
 
-def test_get_encryptable_payload():
+def test_get_encryptable_payload(tpath):
     # we can extract the encryptable part of a message
-    fp = open("tests/samples/full-mail02", "r")
-    msg = Parser(policy=default_policy).parse(fp)
+    with (tpath / "samples/full-mail02").open("r") as fp:
+        msg = Parser(policy=default_policy).parse(fp)
     result = pgp.get_encryptable_payload(msg)
-    want = open("tests/samples/payload02").read()
+    want = (tpath / "samples/payload02").read_text()
     assert result.as_string() == want
 
 
