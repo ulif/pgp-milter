@@ -157,13 +157,13 @@ def test_get_fingerprints_string_input(tmpdir, tpath):
     assert result1 == [FPR_ALICE]
 
 
-def test_get_fingerprints_overlapping_names(tmpdir):
+def test_get_fingerprints_overlapping_names(tmpdir, tpath):
     # we only find exactly matching fingerprints
     gpg = gnupg.GPG(gnupghome=str(tmpdir))
     # the key of "alice@sample.net"
-    gpg.import_keys(open("tests/alice.pub", "r").read())
+    gpg.import_keys((tpath / "alice.pub").read_text())
     # this is the key of "thealice@sample.net"
-    gpg.import_keys(open("tests/alice2.pub", "r").read())
+    gpg.import_keys((tpath / "alice2.pub").read_text())
     assert [FPR_ALICE] == pgp.get_fingerprints(gpg, "alice@sample.net")
     assert [FPR_ALICE2] == pgp.get_fingerprints(gpg, "thealice@sample.net")
 
