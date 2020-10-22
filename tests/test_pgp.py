@@ -168,13 +168,13 @@ def test_get_fingerprints_overlapping_names(tmpdir, tpath):
     assert [FPR_ALICE2] == pgp.get_fingerprints(gpg, "thealice@sample.net")
 
 
-def test_get_fingerprints_matching_names(tmpdir):
+def test_get_fingerprints_matching_names(tmpdir, tpath):
     # in case of keys with matching UIDs we take the newest one.
     gpg = gnupg.GPG(gnupghome=str(tmpdir))
     # the older key of "alice@sample.net"
-    gpg.import_keys(open("tests/alice.pub", "r").read())
+    gpg.import_keys((tpath / "alice.pub").read_text())
     # this is a newer key of "alice@sample.net"
-    gpg.import_keys(open("tests/alice3.pub", "r").read())
+    gpg.import_keys((tpath / "alice3.pub").read_text())
     assert [FPR_ALICE3] == pgp.get_fingerprints(gpg, "alice@sample.net")
 
 
