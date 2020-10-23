@@ -178,12 +178,12 @@ def test_get_fingerprints_matching_names(tmpdir, tpath):
     assert [FPR_ALICE3] == pgp.get_fingerprints(gpg, "alice@sample.net")
 
 
-def test_encrypt_msg(tmpdir):
+def test_encrypt_msg(tmpdir, tpath):
     # we can encrypt a message
     gpg = gnupg.GPG(gnupghome=str(tmpdir))
-    gpg.import_keys(open("tests/alice.pub", "r").read())
-    fp = open("tests/samples/full-mail02", "r")
-    msg = Parser(policy=default_policy).parse(fp)
+    gpg.import_keys((tpath / "alice.pub").read_text())
+    with (tpath / "samples/full-mail02").open("r") as fp:
+        msg = Parser(policy=default_policy).parse(fp)
     result = pgp.encrypt_msg(msg, ["alice@sample.net"], str(tmpdir))
     assert result[0] == True
     enc_msg = result[1].as_string()
