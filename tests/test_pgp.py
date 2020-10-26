@@ -185,6 +185,6 @@ def test_encrypt_msg(tmpdir, tpath):
     with (tpath / "samples/full-mail02").open("r") as fp:
         msg = Parser(policy=default_policy).parse(fp)
     result = pgp.encrypt_msg(msg, ["alice@sample.net"], str(tmpdir))
-    assert result[0] == True
+    assert result[0] is True
     enc_msg = result[1].as_string()
     assert "-----BEGIN PGP MESSAGE-----" in enc_msg
