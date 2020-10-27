@@ -31,8 +31,6 @@ def get_config_dict():
     parser.read_dict({"pgpmilter": OPTIONS_DEFAULTS})
     parser.read(config_paths())
     for key, val in OPTIONS_DEFAULTS.items():
-        if not parser.has_option("pgpmilter", key):
-            continue
         if isinstance(val, bool):
             result[key] = parser.getboolean("pgpmilter", key)
         elif isinstance(val, int):
