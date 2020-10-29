@@ -26,7 +26,7 @@ def test_get_config_dict(home_dir, monkeypatch):
     conf_path1.write("[pgpmilter]\nsocket = foo\ndebug = yes")
     conf_path2.write("[pgpmilter]\nsocket = bar\n")
     result = get_config_dict()
-    assert result == {'debug': True, 'socket': 'bar'}
+    assert result == {'debug': True, 'socket': 'bar', 'timeout': 300}
 
 
 def test_get_config_reads_in_right_order(home_dir):
