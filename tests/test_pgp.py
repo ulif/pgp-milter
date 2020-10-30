@@ -188,3 +188,14 @@ def test_encrypt_msg(tmpdir, tpath):
     assert result[0] is True
     enc_msg = result[1].as_string()
     assert "-----BEGIN PGP MESSAGE-----" in enc_msg
+
+
+def test_encrypt_msg_no_key(tmpdir, tpath):
+    # without key, we cannot encrypt
+    gpg = gnupg.GPG(gnupghome=str(tmpdir))
+    gpg.import_keys((tpath / "alice.pub").read_text())
+    with (tpath / "samples/full-mail02").open("r") as fp:
+        msg = Parser(policy=default_policy).parse(fp)
+    changed, new_msg = pgp.encrypt_msg(msg, ["bob@sample.org"], str(tmpdir))
+    assert changed is False
+    assert new_msg is msg
