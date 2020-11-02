@@ -199,3 +199,15 @@ def test_encrypt_msg_no_key(tmpdir, tpath):
     changed, new_msg = pgp.encrypt_msg(msg, ["bob@sample.org"], str(tmpdir))
     assert changed is False
     assert new_msg is msg
+
+
+def test_encrypt_msg_not_all_keys(tmpdir, tpath):
+    # we do only encrypt if all keys are available
+    gpg = gnupg.GPG(gnupghome=str(tmpdir))
+    gpg.import_keys((tpath / "alice.pub").read_text())
+    with (tpath / "samples/full-mail02").open("r") as fp:
+        msg = Parser(policy=default_policy).parse(fp)
+    changed, new_msg = pgp.encrypt_msg(
+        msg, ["bob@sample.org", "alice@sample.net"], str(tmpdir))
+    assert changed is False
+    assert new_msg is msg
