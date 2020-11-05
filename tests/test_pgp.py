@@ -211,3 +211,16 @@ def test_encrypt_msg_not_all_keys(tmpdir, tpath):
         msg, ["bob@sample.org", "alice@sample.net"], str(tmpdir))
     assert changed is False
     assert new_msg is msg
+
+
+def test_encrypt_msg_multi_rcpts(tmpdir, tpath):
+    # we can encypt messages for multple recipients
+    gpg = gnupg.GPG(gnupghome=str(tmpdir))
+    gpg.import_keys((tpath / "alice.pub").read_text())
+    gpg.import_keys((tpath / "bob.pub").read_text())
+    with (tpath / "samples/full-mail02").open("r") as fp:
+        msg = Parser(policy=default_policy).parse(fp)
+    changed, new_msg = pgp.encrypt_msg(
+        msg, ["bob@sample.org", "alice@sample.net"], str(tmpdir))
+    assert changed is True
+    assert "-----BEGIN PGP MESSAGE-----" in new_msg.as_string()
