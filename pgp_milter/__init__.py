@@ -156,12 +156,12 @@ class PGPMilter(Milter.Base):
         return Milter.CONTINUE
 
 
-def run(name, sock, timeout=300):
+def run(name, config, timeout=300):
     """Start a milter loop.
     """
     Milter.factory = PGPMilter
     Milter.set_flags(Milter.ADDHDRS + Milter.CHGBODY)
-    Milter.runmilter(name, sock, timeout=timeout)
+    Milter.runmilter(name, config.socket, timeout=timeout)
 
 
 def main(argv=None):
@@ -171,7 +171,7 @@ def main(argv=None):
     if args.version:
         print_version()
         sys.exit(0)
-    run('pgpmilter', args.socket)
+    run('pgpmilter', args)
 
 
 # vim: expandtab ts=4 sw=4
