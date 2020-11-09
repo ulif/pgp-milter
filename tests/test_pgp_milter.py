@@ -1,6 +1,7 @@
 import pgp_milter
 import pytest
 import Milter.testctx
+from argparse import Namespace
 from Milter.test import TestBase as MilterTestBase
 from pgp_milter import (
     __version__,
@@ -71,9 +72,10 @@ def test_run(monkeypatch):
     # we can run milters
     def mock_runmilter(name, sock, timeout=300):
         Milter._mock_vals = [name, sock, timeout]
+    config = Namespace(socket="inet6:2323@[::1]")
     monkeypatch.setattr("Milter.runmilter", mock_runmilter)
     monkeypatch.setattr("Milter._mock_vals", [], raising=False)
-    result = run_main("testmilter", "inet6:2323@[::1]")
+    result = run_main("testmilter", config)
     assert Milter.factory == PGPMilter
     assert Milter._mock_vals == ["testmilter", "inet6:2323@[::1]", 300]
     assert result is None
