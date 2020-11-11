@@ -43,6 +43,11 @@ def handle_options(args):
         default="inet6:{0}@{1}".format(PORT, BINDADDR),
         help="IPv4, IPv6 or unix socket (default: %(default)s)")
     parser.add_argument(
+        "--timeout", "-t",
+        type=int,
+        default=300,
+        help="timeout in seconds for connections.")
+    parser.add_argument(
         "--version",
         action="store_true",
         help="output version information and exit.",
