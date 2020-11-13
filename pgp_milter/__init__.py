@@ -166,7 +166,7 @@ def run(name, config):
     """
     Milter.factory = PGPMilter
     Milter.set_flags(Milter.ADDHDRS + Milter.CHGBODY)
-    Milter.runmilter(name, config.socket, timeout=300)
+    Milter.runmilter(name, config.socket, timeout=config.timeout)
 
 
 def main(argv=None):
