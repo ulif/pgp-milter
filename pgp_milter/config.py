@@ -6,7 +6,7 @@ from configparser import ConfigParser
 OPTIONS_DEFAULTS = dict(
     socket="inet6:30072@[::1]",
     timeout=300,
-    pgphome="~/.pgpmilterhome",
+    pgphome="~/.pgphome",
     debug=False,
 )
 
