@@ -44,6 +44,8 @@ def test_handle_options_defaults():
     assert args.version is False
     assert args.debug is False
     assert args.socket == "inet6:30072@[::1]"
+    assert args.timeout == 300
+    assert args.pgphome == "~/.pgphome"
 
 
 def test_handle_options_debug():
