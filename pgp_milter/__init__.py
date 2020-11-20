@@ -11,11 +11,6 @@ from pgp_milter.pgp import encrypt_msg
 __version__ = "0.1.dev0"  # set also in setup.py
 
 
-# Default values
-BINDADDR = '[::1]'
-PORT = '30072'
-
-
 def print_version():
     """Output current version and copyright infos.
     """
@@ -34,13 +29,11 @@ def handle_options(args):
     )
     parser.add_argument(
         "--debug", "-d",
-        default=False,
         action="store_true",
         help="Enable debug output."),
     parser.add_argument(
         "--socket", "-s",
         type=str,
-        default="inet6:{0}@{1}".format(PORT, BINDADDR),
         help="IPv4, IPv6 or unix socket (default: %(default)s)")
     parser.add_argument(
         "--pgphome", "-p",
@@ -49,7 +42,6 @@ def handle_options(args):
     parser.add_argument(
         "--timeout", "-t",
         type=int,
-        default=300,
         help="timeout in seconds for connections.")
     parser.add_argument(
         "--version",
