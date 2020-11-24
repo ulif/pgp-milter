@@ -2,8 +2,10 @@
 #
 # tests for the `pgp` module.
 #
+import pytest
 import re
 import gnupg
+from argparse import Namespace
 from email.mime.text import MIMEText
 from email.message import Message
 from email.parser import Parser
@@ -224,3 +226,19 @@ def test_encrypt_msg_multi_rcpts(tmpdir, tpath):
         msg, ["bob@sample.org", "alice@sample.net"], str(tmpdir))
     assert changed is True
     assert "-----BEGIN PGP MESSAGE-----" in new_msg.as_string()
+
+
+def test_prepare_pgp_lookups(home_dir, tpath):
+    # we can check preconditions for key lookups
+    pgphome = home_dir / "somedir"
+    conf = Namespace(pgphome=str(pgphome))
+    with pytest.raises(SystemExit) as exc:
+        pgp.prepare_pgp_lookups(conf)
+
+
+def test_prepare_pgp_lookups_ok(home_dir, tpath):
+    # we can check preconditions for key lookups
+    pgphome = home_dir / "somedir"
+    conf = Namespace(pgphome=str(pgphome))
+    pgphome.mkdir()
+    assert pgp.prepare_pgp_lookups(conf) is None

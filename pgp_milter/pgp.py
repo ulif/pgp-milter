@@ -4,7 +4,10 @@
 #
 import gnupg
 import email.mime.text
+import os
 import os.path
+import pathlib
+import sys
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.parser import Parser
@@ -125,3 +128,12 @@ def encrypt_msg(msg, recipients, gpg_env_path=None):
         return False, msg
     new_msg = pgp_mime_encrypt(gpg, msg, fprs)
     return (True, new_msg)
+
+
+def prepare_pgp_lookups(conf):
+    """Ensure, all preconditions are met for looking up PGP keys.
+    """
+    pgphome = pathlib.Path(conf.pgphome).expanduser()
+    if not pgphome.is_dir():
+        print("No such directory: %s" % pgphome)
+        sys.exit(os.EX_USAGE)
