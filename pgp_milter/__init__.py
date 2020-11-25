@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 import mime
+import os
+import pathlib
 import sys
 import Milter
 from argparse import ArgumentParser
 from io import BytesIO
 from pgp_milter.config import get_config_dict
-from pgp_milter.pgp import encrypt_msg
+from pgp_milter.pgp import encrypt_msg, prepare_pgp_lookups
 
 
 __version__ = "0.1.dev0"  # set also in setup.py
@@ -172,6 +174,7 @@ def main(argv=None):
     if args.version:
         print_version()
         sys.exit(0)
+    prepare_pgp_lookups(args)
     run('pgpmilter', args)
 
 
