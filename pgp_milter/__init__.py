@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import mime
-import os
-import pathlib
 import sys
 import Milter
 from argparse import ArgumentParser

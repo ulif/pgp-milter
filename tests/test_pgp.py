@@ -232,7 +232,7 @@ def test_prepare_pgp_lookups(home_dir, tpath):
     # we can check preconditions for key lookups
     pgphome = home_dir / "somedir"
     conf = Namespace(pgphome=str(pgphome))
-    with pytest.raises(SystemExit) as exc:
+    with pytest.raises(SystemExit):
         pgp.prepare_pgp_lookups(conf)
 
 
