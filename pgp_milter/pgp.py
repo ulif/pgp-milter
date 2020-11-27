@@ -5,7 +5,6 @@
 import gnupg
 import email.mime.text
 import os
-import os.path
 import pathlib
 import sys
 from email.mime.application import MIMEApplication
@@ -120,9 +119,10 @@ def encrypt_msg(msg, recipients, gpg_env_path=None):
     Returns, whether changes happened and (possibly changed) message created.
     """
     changed = False
-    if gpg_env_path is None or not os.path.isdir(gpg_env_path):
+    gpg_env_path = gpg_env_path and pathlib.Path(gpg_env_path).expanduser()
+    if gpg_env_path is None or not gpg_env_path.is_dir():
         return changed, msg
-    gpg = gnupg.GPG(gnupghome=gpg_env_path)
+    gpg = gnupg.GPG(gnupghome=str(gpg_env_path))
     fprs = get_fingerprints(gpg, recipients)
     if not len(fprs) == len(recipients):
         return False, msg
