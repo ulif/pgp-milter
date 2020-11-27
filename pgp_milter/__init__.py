@@ -66,6 +66,7 @@ class PGPMilter(Milter.Base):
         self.fp = None
         self.headers_seen = []
         self.rcpts = []
+        self.config = None
 
     @Milter.noreply
     def connect(self, ip_name, family, hostaddr):
@@ -137,7 +138,7 @@ class PGPMilter(Milter.Base):
                 "X-PGPMilter", "Scanned by PGPMilter %s" % __version__, -1)
         self.fp.seek(0)
         msg = mime.message_from_file(self.fp)
-        changed, msg = encrypt_msg(msg, self.rcpts)
+        changed, msg = encrypt_msg(msg, self.rcpts, self.config.pgphome)
         if not changed:
             return Milter.ACCEPT
         fp = BytesIO(msg.as_bytes().split(b'\n\n', 1)[1])
@@ -161,6 +162,7 @@ def run(name, config):
     """Start a milter loop.
     """
     Milter.factory = PGPMilter
+    Milter.factory.config = config
     Milter.set_flags(Milter.ADDHDRS + Milter.CHGBODY)
     Milter.runmilter(name, config.socket, timeout=config.timeout)
 
