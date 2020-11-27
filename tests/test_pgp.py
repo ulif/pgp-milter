@@ -228,6 +228,16 @@ def test_encrypt_msg_multi_rcpts(tmpdir, tpath):
     assert "-----BEGIN PGP MESSAGE-----" in new_msg.as_string()
 
 
+def test_encrypt_msg_no_pgp_env(tmpdir, tpath):
+    # without a gpg environment, we cannot encrypt
+    with (tpath / "samples/full-mail02").open("r") as fp:
+        msg = Parser(policy=default_policy).parse(fp)
+    changed, new_msg = pgp.encrypt_msg(
+        msg, ["bob@sample.org"], str(tmpdir / "nowhere" ))
+    assert changed is False
+    assert new_msg is msg
+
+
 def test_prepare_pgp_lookups(home_dir, tpath):
     # we can check preconditions for key lookups
     pgphome = home_dir / "somedir"
