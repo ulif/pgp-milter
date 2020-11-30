@@ -1,3 +1,4 @@
+import gnupg
 import pgp_milter
 import pytest
 import Milter.testctx
@@ -214,6 +215,22 @@ class TestPGPMilter(object):
             rc = milter.feedFile(fp)
             assert rc == Milter.ACCEPT
         assert "X-PGPMilter" in milter._msg.keys()
+        assert milter._bodyreplaced is False
+
+    def test_eom_encrypting(self, home_dir, tpath):
+        # eom() can encrypt messages
+        config = Namespace(pgphome=str(home_dir))
+        milter = PGPTestMilter()
+        key = (tpath / "alice.pub").read_text()
+        gpg = gnupg.GPG(gnupghome=str(home_dir))
+        gpg.import_keys(key)
+        milter.config = config
+        assert milter.connect() == Milter.CONTINUE
+        with (tpath / "samples" / "full-mail01").open("rb") as fp:
+            rc = milter.feedFile(fp, rcpt="alice@sample.net")
+            assert rc == Milter.ACCEPT
+        assert "X-PGPMilter" in milter._msg.keys()
+        assert milter._bodyreplaced is True
 
     def test_close_closes_also_fp(self):
         # the local filepointer is closed then the connection closes.
