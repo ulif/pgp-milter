@@ -157,6 +157,18 @@ class PGPMilter(Milter.Base):
             self.fp.close()
         return Milter.CONTINUE
 
+    def update_headers(self, old_msg, new_msg):
+        """Replace headerfields from `old_msg` by the ones of `new_msg`.
+        """
+        # delete old values
+        for name in set(old_msg.keys()):
+            for n in range(len(old_msg.getheaders(name)), 0, -1):
+                self.chgheader(name, n-1, '')
+        # add current headers
+        for name, val in new_msg.items():
+            self.addheader(name, val)
+
+
 
 def run(name, config):
     """Start a milter loop.
