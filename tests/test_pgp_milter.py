@@ -1,8 +1,10 @@
 import gnupg
+import mime
 import pgp_milter
 import pytest
 import Milter.testctx
 from argparse import Namespace
+from io import BytesIO
 from Milter.test import TestBase as MilterTestBase
 from pgp_milter import (
     __version__,
@@ -231,6 +233,32 @@ class TestPGPMilter(object):
             assert rc == Milter.ACCEPT
         assert "X-PGPMilter" in milter._msg.keys()
         assert milter._bodyreplaced is True
+
+    def test_update_headers(self, home_dir, tpath):
+        # we can update complete sets of headers
+        milter = PGPTestMilter()
+        milter._body = "1"
+        msg1 = mime.message_from_file(
+            BytesIO(b'A: foo\nB: bar\n\n\ntest\n'))
+        milter._msg = msg1
+        msg2 = mime.message_from_file(
+            BytesIO(b'C: baz\nD: bat\n\n\ntest\n'))
+        milter.update_headers(msg1, msg2)
+        assert milter._msg.items() == msg2.items()
+
+
+    def test_update_headers_multiple(self, home_dir, tpath):
+        # we can update headers where some names are repeated
+        milter = PGPTestMilter()
+        milter._body = "1"
+        msg1 = mime.message_from_file(
+            BytesIO(b'A: foo\nB: bar\nA: baz\n\n\ntest\n'))
+        milter._msg = msg1
+        msg2 = mime.message_from_file(
+            BytesIO(b'A: foo\nC: baz\nA: baz\n\n\ntest\n'))
+        milter.update_headers(msg1, msg2)
+        assert milter._msg.items() == msg2.items()
+
 
     def test_close_closes_also_fp(self):
         # the local filepointer is closed then the connection closes.
