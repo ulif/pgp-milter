@@ -138,10 +138,11 @@ class PGPMilter(Milter.Base):
                 "X-PGPMilter", "Scanned by PGPMilter %s" % __version__, -1)
         self.fp.seek(0)
         msg = mime.message_from_file(self.fp)
-        changed, msg = encrypt_msg(msg, self.rcpts, self.config.pgphome)
+        changed, new_msg = encrypt_msg(msg, self.rcpts, self.config.pgphome)
         if not changed:
             return Milter.ACCEPT
-        fp = BytesIO(msg.as_bytes().split(b'\n\n', 1)[1])
+        self.update_headers(msg, new_msg)
+        fp = BytesIO(new_msg.as_bytes().split(b'\n\n', 1)[1])
         while True:
             buf = fp.read(8192)
             if len(buf) == 0:
