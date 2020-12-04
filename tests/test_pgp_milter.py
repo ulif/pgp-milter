@@ -246,7 +246,6 @@ class TestPGPMilter(object):
         milter.update_headers(msg1, msg2)
         assert milter._msg.items() == msg2.items()
 
-
     def test_update_headers_multiple(self, home_dir, tpath):
         # we can update headers where some names are repeated
         milter = PGPTestMilter()
@@ -258,7 +257,6 @@ class TestPGPMilter(object):
             BytesIO(b'A: foo\nC: baz\nA: baz\n\n\ntest\n'))
         milter.update_headers(msg1, msg2)
         assert milter._msg.items() == msg2.items()
-
 
     def test_close_closes_also_fp(self):
         # the local filepointer is closed then the connection closes.

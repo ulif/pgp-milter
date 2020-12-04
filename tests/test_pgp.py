@@ -233,7 +233,7 @@ def test_encrypt_msg_no_pgp_env(tmpdir, tpath):
     with (tpath / "samples/full-mail02").open("r") as fp:
         msg = Parser(policy=default_policy).parse(fp)
     changed, new_msg = pgp.encrypt_msg(
-        msg, ["bob@sample.org"], str(tmpdir / "nowhere" ))
+        msg, ["bob@sample.org"], str(tmpdir / "nowhere"))
     assert changed is False
     assert new_msg is msg
 

@@ -170,7 +170,6 @@ class PGPMilter(Milter.Base):
             self.addheader(name, val)
 
 
-
 def run(name, config):
     """Start a milter loop.
     """
