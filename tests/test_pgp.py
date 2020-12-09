@@ -190,6 +190,7 @@ def test_encrypt_msg(tmpdir, tpath):
     assert result[0] is True
     enc_msg = result[1].as_string()
     assert "-----BEGIN PGP MESSAGE-----" in enc_msg
+    assert result[1]['Content-Type'].startswith('multipart/encrypted')
 
 
 def test_encrypt_msg_no_key(tmpdir, tpath):
