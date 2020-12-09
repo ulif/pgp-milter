@@ -111,7 +111,7 @@ class PGPMilter(Milter.Base):
         """
         self.headers_seen.append((hkey, hval),)
         if self.fp:
-            hline = "%s: %s" % (hkey, hval)
+            hline = "%s: %s\n" % (hkey, hval)
             self.fp.write(hline.encode())
         return Milter.CONTINUE
 

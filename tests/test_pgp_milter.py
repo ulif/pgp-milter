@@ -141,10 +141,12 @@ class TestPGPMilter(object):
         ctx = Milter.testctx.TestCtx()
         Milter.factory = PGPMilter
         ctx._connect()
+        ctx.getpriv().fp = BytesIO()
         ctx._header("X-Foo", "foo")
         ctx._header("X-Foo", "bar")
         m = ctx.getpriv()
-        assert m.headers_seen == [("X-Foo", "foo"), ("X-Foo", "bar")]
+        m.fp.seek(0)
+        assert m.fp.read() == b'X-Foo: foo\nX-Foo: bar\n'
 
     def test_envfrom_blanks_seen_data(self):
         # stored messages and headers are blanked on each msg from
