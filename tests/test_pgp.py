@@ -68,6 +68,14 @@ def test_parse_raw(tpath):
     assert isinstance(parsed, Message)
 
 
+def test_get_gpg(tmpdir):
+    # we can turn a path into a GPG env.
+    path = tmpdir / "foo"
+    assert pgp.get_gpg(str(path)) is None
+    path.mkdir()
+    assert isinstance(pgp.get_gpg(str(path)), gnupg.GPG)
+
+
 def test_gpg_encrypt(tmpdir, tpath):
     # we can pgp encrypt text
     gpg = gnupg.GPG(gnupghome=str(tmpdir))
