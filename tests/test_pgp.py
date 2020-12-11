@@ -198,7 +198,6 @@ def test_encrypt_msg(tmpdir, tpath):
         b'Content-Type: text/plain; charset=us-ascii\n'
         b'Content-Disposition: inline\n\nfoo bar baz\n\n')
     assert dec_msg.data == msg.as_bytes()
-    #assert msg._body == "asd"
 
 
 def test_encrypt_msg_no_key(tmpdir, tpath):

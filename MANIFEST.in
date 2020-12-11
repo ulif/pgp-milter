@@ -1,5 +1,5 @@
 exclude pyproject.toml
-recursive-include tests *.pub *.py *.txt
+recursive-include tests *.pub *.py *.sec *.txt
 recursive-include tests/samples *
 recursive-include LICENSES *.txt
 recursive-include .reuse dep5

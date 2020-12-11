@@ -7,6 +7,6 @@ Files: setup.py pgp_milter/*.py tests/*.py
 Copyright: 2019 Uli Fouquet <uli@gnufix.de>
 License: GPL-3.0-or-later
 
-Files: COPYRIGHT MANIFEST.in *.rst *.cfg *.pub *.txt *.ini .gitignore *uli tests/samples/*
+Files: COPYRIGHT MANIFEST.in *.rst *.cfg *.pub *.sec *.txt *.ini .gitignore *uli tests/samples/*
 Copyright: 2019 Uli Fouquet <uli@gnufix.de>
 License: CC-BY-SA-4.0
