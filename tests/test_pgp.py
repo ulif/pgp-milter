@@ -183,7 +183,7 @@ def test_get_fingerprints_matching_names(tmpdir, tpath):
 def test_encrypt_msg(tmpdir, tpath):
     # we can encrypt a message
     gpg = gnupg.GPG(gnupghome=str(tmpdir))
-    gpg.import_keys((tpath / "alice.pub").read_text())
+    gpg.import_keys((tpath / "alice3.pub").read_text())
     with (tpath / "samples/full-mail02").open("r") as fp:
         msg = Parser(policy=default_policy).parse(fp)
     result = pgp.encrypt_msg(msg, ["alice@sample.net"], str(tmpdir))
@@ -191,6 +191,14 @@ def test_encrypt_msg(tmpdir, tpath):
     enc_msg = result[1].as_string()
     assert "-----BEGIN PGP MESSAGE-----" in enc_msg
     assert result[1]['Content-Type'].startswith('multipart/encrypted')
+    gpg.import_keys((tpath / "alice3.sec").read_text())
+    dec_msg = gpg.decrypt(enc_msg)
+    assert dec_msg.ok is True
+    assert dec_msg.data == (
+        b'Content-Type: text/plain; charset=us-ascii\n'
+        b'Content-Disposition: inline\n\nfoo bar baz\n\n')
+    assert dec_msg.data == msg.as_bytes()
+    #assert msg._body == "asd"
 
 
 def test_encrypt_msg_no_key(tmpdir, tpath):
