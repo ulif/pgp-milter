@@ -225,7 +225,7 @@ class TestPGPMilter(object):
         # eom() can encrypt messages
         config = Namespace(pgphome=str(home_dir))
         milter = PGPTestMilter()
-        key = (tpath / "alice.pub").read_text()
+        key = (tpath / "alice3.pub").read_text()
         gpg = gnupg.GPG(gnupghome=str(home_dir))
         gpg.import_keys(key)
         milter.config = config
@@ -235,6 +235,12 @@ class TestPGPMilter(object):
             assert rc == Milter.ACCEPT
         assert "X-PGPMilter" in milter._msg.keys()
         assert milter._bodyreplaced is True
+        milter._body.seek(0)
+        gpg.import_keys((tpath / "alice3.sec").read_text())
+        dec_msg = gpg.decrypt(milter._body.read())
+        assert dec_msg.ok is True
+        assert dec_msg.data.startswith(
+                b'Content-Type: multipart/alternative;')
 
     def test_update_headers(self, home_dir, tpath):
         # we can update complete sets of headers
