@@ -27,3 +27,10 @@ def home_dir(request, monkeypatch, tmpdir):
         os.chdir(_old_cwd)
     request.addfinalizer(teardown)
     return tmpdir / "home"
+
+
+@pytest.fixture(scope="function", autouse=True)
+def reset_config(monkeypatch):
+    """Reset PGPMilter.config before/after each test.
+    """
+    monkeypatch.setattr("pgp_milter.PGPMilter.config", None)
