@@ -110,9 +110,11 @@ def test_main_calls_run(monkeypatch):
     monkeypatch.setattr("sys.argv", ["scriptname"])
     monkeypatch.setattr("Milter.runmilter", mock_runmilter)
     monkeypatch.setattr("Milter._mock_vals", [], raising=False)
+    assert PGPMilter.config is None
     result = main()
     assert Milter.factory == PGPMilter
     assert Milter._mock_vals == ["pgpmilter", "inet6:30072@[::1]", 300]
+    assert Milter.factory.config is not None
     assert result is None
 
 
@@ -211,9 +213,10 @@ class TestPGPMilter(object):
         ctx._abort()
         assert ctx.getpriv().rcpts == []
 
-    def test_x_pgpmilter_header_added(self, tpath):
+    def test_x_pgpmilter_header_added(self, tpath, home_dir):
         # the X-PGPMilter header is added during eom()
         milter = PGPTestMilter()
+        milter.config = Namespace(pgphome=str(home_dir))
         assert milter.connect() == Milter.CONTINUE
         with (tpath / "samples" / "full-mail01").open("rb") as fp:
             rc = milter.feedFile(fp)

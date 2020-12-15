@@ -57,6 +57,8 @@ class PGPMilter(Milter.Base):
     """A milter that currently does nothing.
     """
 
+    config = None
+
     def __init__(self):
         self._id = Milter.uniqueID()
         self._ip = None
@@ -66,7 +68,6 @@ class PGPMilter(Milter.Base):
         self.fp = None
         self.headers_seen = []
         self.rcpts = []
-        self.config = None
 
     @Milter.noreply
     def connect(self, ip_name, family, hostaddr):
