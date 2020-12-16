@@ -8,7 +8,7 @@ import gnupg
 from argparse import Namespace
 from email.mime.text import MIMEText
 from email.message import Message
-from email.parser import Parser
+from email.parser import Parser, BytesParser
 from email.policy import default as default_policy
 from pgp_milter import pgp
 
@@ -141,6 +141,16 @@ def test_prepend_headerfields():
     msg.add_header("X-Foo", "baz")
     result = pgp.prepend_header_fields(msg, [("To", "foo"), ("From", "bar")])
     assert result.keys() == ["From", "To", "Subject", "X-Foo"]
+
+
+def test_prepend_headerfields_encoded():
+    # we cope with non-standard encodings
+    msg = BytesParser().parsebytes('Subject: föö'.encode('utf-8'))
+    result = pgp.prepend_header_fields(msg, [("To", "foo"), ("From", "bar")])
+    assert result.items() == [
+        ('To', 'foo'),
+        ('From', 'bar'),
+        ('Subject', '=?unknown-8bit?b?ZsO2w7Y=?=')]
 
 
 def test_get_fingerprints_no_match(tmpdir):
