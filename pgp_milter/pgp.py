@@ -95,6 +95,8 @@ def prepend_header_fields(msg, headers):
     for k, v in final_headers:
         if k in msg.keys():
             del msg[k]
+        if not isinstance(v, str):
+            v = v.encode()  # value looks like Header type.
         msg.add_header(k, v)
     return msg
 
