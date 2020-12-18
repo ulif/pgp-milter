@@ -9,7 +9,7 @@ from argparse import Namespace
 from email.mime.text import MIMEText
 from email.message import Message
 from email.parser import Parser, BytesParser
-from email.policy import default as default_policy
+from email.policy import default as default_policy, compat32
 from pgp_milter import pgp
 
 
@@ -144,8 +144,22 @@ def test_prepend_headerfields():
 
 
 def test_prepend_headerfields_encoded():
-    # we cope with non-standard encodings
-    msg = BytesParser().parsebytes('Subject: föö'.encode('utf-8'))
+    # we cope with non-ascii encodings in raw strings
+    msg = BytesParser(
+        policy=default_policy).parsebytes('Subject: föö'.encode('utf-8'))
+    assert msg.get_all("Subject")[0] == "föö"
+    result = pgp.prepend_header_fields(msg, [("To", "foo"), ("From", "bar")])
+    assert result.items() == [
+        ('To', 'foo'),
+        ('From', 'bar'),
+        ('Subject', 'föö')]
+
+
+def test_prepend_headerfields_as_header_objs():
+    # we cope with email.header.Header instances as headerfields
+    msg = BytesParser(
+        policy=compat32).parsebytes('Subject: föö'.encode('utf-8'))
+    assert not isinstance(msg.get_all("Subject")[0], str)
     result = pgp.prepend_header_fields(msg, [("To", "foo"), ("From", "bar")])
     assert result.items() == [
         ('To', 'foo'),
