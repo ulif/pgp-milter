@@ -245,6 +245,26 @@ class TestPGPMilter(object):
         assert dec_msg.data.startswith(
                 b'Content-Type: multipart/alternative;')
 
+    def test_eom_leaves_headercontent(self, home_dir, tpath):
+        # headerfields might be moved, but are not changed
+        # We try to leave headerfields untouched.
+        config = Namespace(pgphome=str(home_dir))
+        milter = PGPTestMilter()
+        key = (tpath / "alice3.pub").read_text()
+        gpg = gnupg.GPG(gnupghome=str(home_dir))
+        gpg.import_keys(key)
+        milter.config = config
+        assert milter.connect() == Milter.CONTINUE
+        with (tpath / "samples" / "full-mail03").open("rb") as fp:
+            rc = milter.feedFile(fp, rcpt="alice@sample.net")
+            assert rc == Milter.ACCEPT
+        assert "X-PGPMilter" in milter._msg.keys()
+        assert milter._bodyreplaced is True
+        milter._body.seek(0)
+        content = milter._body.read()
+        # should not contain encoding settings
+        assert "Ümlaut" in content.decode('utf-8')
+
     def test_update_headers(self, home_dir, tpath):
         # we can update complete sets of headers
         milter = PGPTestMilter()

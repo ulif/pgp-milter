@@ -3,6 +3,8 @@ import mime
 import sys
 import Milter
 from argparse import ArgumentParser
+from email import message_from_binary_file
+from email.policy import default as default_policy
 from io import BytesIO
 from pgp_milter.config import get_config_dict
 from pgp_milter.pgp import encrypt_msg, prepare_pgp_lookups
@@ -138,7 +140,7 @@ class PGPMilter(Milter.Base):
         self.addheader(
                 "X-PGPMilter", "Scanned by PGPMilter %s" % __version__, -1)
         self.fp.seek(0)
-        msg = mime.message_from_file(self.fp)
+        msg = message_from_binary_file(self.fp, policy=default_policy)
         changed, new_msg = encrypt_msg(msg, self.rcpts, self.config.pgphome)
         if not changed:
             return Milter.ACCEPT
@@ -164,7 +166,7 @@ class PGPMilter(Milter.Base):
         """
         # delete old values
         for name in set(old_msg.keys()):
-            for n in range(len(old_msg.getheaders(name)), 0, -1):
+            for n in range(len(old_msg.get_all(name)), 0, -1):
                 self.chgheader(name, n-1, '')
         # add current headers
         for name, val in new_msg.items():
