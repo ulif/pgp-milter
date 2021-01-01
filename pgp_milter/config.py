@@ -7,6 +7,7 @@ OPTIONS_DEFAULTS = dict(
     socket="inet6:30072@[::1]",
     timeout=300,
     pgphome="~/.pgphome",
+    buflen=8192,
     debug=False,
 )
 

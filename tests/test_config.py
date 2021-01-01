@@ -28,7 +28,7 @@ def test_get_config_dict(home_dir, monkeypatch):
     result = get_config_dict()
     assert result == {
         'debug': True, 'socket': 'bar', 'timeout': 300,
-        'pgphome': '~/.pgphome'
+        'buflen': 8192, 'pgphome': '~/.pgphome'
     }
 
 
