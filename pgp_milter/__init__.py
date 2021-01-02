@@ -46,6 +46,10 @@ def handle_options(args):
         type=int,
         help="timeout in seconds for connections.")
     parser.add_argument(
+        "--bufsize", "-b",
+        type=int,
+        help="buffer size in bytes when feeding MTA (default: %(default)s)")
+    parser.add_argument(
         "--version",
         action="store_true",
         help="output version information and exit.",
