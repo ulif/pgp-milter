@@ -1,5 +1,5 @@
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 def read(fname):
@@ -43,7 +43,8 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: Implementation :: CPython",
     ],
-    packages=["pgp_milter"],
+    packages=find_packages(where="src"),
+    package_dir={"": "src"},
     install_requires=install_requires,
     extras_require={"test": tests_require, },
     tests_require=tests_require,
