@@ -3,7 +3,7 @@ Upstream-Name: pgp-milter
 Upstream-Contact: Uli Fouquet <uli@gnufix.de>
 Source: https://github.com/ulif/pgp-milter
 
-Files: setup.py pgp_milter/*.py tests/*.py
+Files: setup.py src/pgp_milter/*.py tests/*.py
 Copyright: 2019 Uli Fouquet <uli@gnufix.de>
 License: GPL-3.0-or-later
 
