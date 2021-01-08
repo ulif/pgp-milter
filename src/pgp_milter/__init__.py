@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import mime
 import sys
 import Milter
 from argparse import ArgumentParser
