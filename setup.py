@@ -12,7 +12,8 @@ install_requires = [
 ]
 
 tests_require = [
-    "pytest",
+    "coverage[toml]>=5.0.2",
+    "pytest>=4.3.0",
 ]
 
 
@@ -46,7 +47,7 @@ setup(
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     install_requires=install_requires,
-    extras_require={"test": tests_require, },
+    extras_require={"tests": tests_require, },
     tests_require=tests_require,
     zip_safe=False,
     entry_points={"console_scripts": ["pgp-milter = pgp_milter:main"]},
