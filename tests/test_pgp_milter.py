@@ -223,6 +223,7 @@ class TestPGPMilter(object):
             assert rc == Milter.ACCEPT
         assert "X-PGPMilter" in milter._msg.keys()
         assert milter._bodyreplaced is False
+        milter.logfp.close()
 
     def test_eom_encrypting(self, home_dir, tpath):
         # eom() can encrypt messages
@@ -244,6 +245,7 @@ class TestPGPMilter(object):
         assert dec_msg.ok is True
         assert dec_msg.data.startswith(
                 b'Content-Type: multipart/alternative;')
+        milter.logfp.close()
 
     def test_eom_leaves_headercontent(self, home_dir, tpath):
         # headerfields might be moved, but are not changed
@@ -264,6 +266,7 @@ class TestPGPMilter(object):
         content = milter._body.read()
         # should not contain encoding settings
         assert "Ümlaut" in content.decode('utf-8')
+        milter.logfp.close()
 
     def test_update_headers(self, home_dir, tpath):
         # we can update complete sets of headers
@@ -276,6 +279,7 @@ class TestPGPMilter(object):
             BytesIO(b'C: baz\nD: bat\n\n\ntest\n'))
         milter.update_headers(msg1, msg2)
         assert milter._msg.items() == msg2.items()
+        milter.logfp.close()
 
     def test_update_headers_multiple(self, home_dir, tpath):
         # we can update headers where some names are repeated
@@ -288,6 +292,7 @@ class TestPGPMilter(object):
             BytesIO(b'A: foo\nC: baz\nA: baz\n\n\ntest\n'))
         milter.update_headers(msg1, msg2)
         assert milter._msg.items() == msg2.items()
+        milter.logfp.close()
 
     def test_close_closes_also_fp(self):
         # the local filepointer is closed then the connection closes.
