@@ -150,6 +150,16 @@ class TestPGPMilter(object):
         m.fp.seek(0)
         assert m.fp.read() == b'X-Foo: foo\nX-Foo: bar\n'
 
+    def test_header_without_fp(self):
+        # we cope with the internal file descritor being closed
+        ctx = Milter.testctx.TestCtx()
+        Milter.factory = PGPMilter
+        ctx._connect()
+        ctx.getpriv().fp = None
+        ctx._header("X-Foo", "foo")
+        m = ctx.getpriv()
+        assert m.headers_seen == [("X-Foo", "foo")]
+
     def test_envfrom_blanks_seen_data(self):
         # stored messages and headers are blanked on each msg from
         ctx = Milter.testctx.TestCtx()
