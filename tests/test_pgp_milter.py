@@ -160,6 +160,17 @@ class TestPGPMilter(object):
         m = ctx.getpriv()
         assert m.headers_seen == [("X-Foo", "foo")]
 
+    def test_eoh_adds_linebreak(self):
+        # we add a linebreak when all headers were sent
+        ctx = Milter.testctx.TestCtx()
+        Milter.factory = PGPMilter
+        ctx._connect()
+        ctx.getpriv().fp = BytesIO()
+        ctx._eoh()
+        m = ctx.getpriv()
+        m.fp.seek(0)
+        assert m.fp.read() == b'\n'
+
     def test_envfrom_blanks_seen_data(self):
         # stored messages and headers are blanked on each msg from
         ctx = Milter.testctx.TestCtx()
