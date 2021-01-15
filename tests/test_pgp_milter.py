@@ -171,6 +171,14 @@ class TestPGPMilter(object):
         m.fp.seek(0)
         assert m.fp.read() == b'\n'
 
+    def test_eoh_copes_w_missing_fp(self):
+        # eoh() copes with the internal file descriptor being closed
+        ctx = Milter.testctx.TestCtx()
+        Milter.factory = PGPMilter
+        ctx._connect()
+        ctx.getpriv().fp = None
+        assert ctx._eoh() == Milter.CONTINUE
+
     def test_envfrom_blanks_seen_data(self):
         # stored messages and headers are blanked on each msg from
         ctx = Milter.testctx.TestCtx()
