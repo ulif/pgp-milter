@@ -334,5 +334,15 @@ class TestPGPMilter(object):
         ctx._close()
         assert ctx.getpriv().fp.closed is True
 
+    def test_close_copes_with_closed_fp(self):
+        # closing call copes with removed internal filepointer
+        ctx = Milter.testctx.TestCtx()
+        Milter.factory = PGPMilter
+        ctx._connect()
+        ctx._envfrom("foo@bar")
+        ctx._header("X-Foo", "foo")
+        ctx.getpriv().fp = None
+        assert ctx._close() is None
+
 
 # vim: expandtab ts=4 sw=4
