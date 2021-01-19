@@ -27,7 +27,7 @@ class PGPTestMilter(MilterTestBase, PGPMilter):
     """
     def __init__(self):
         MilterTestBase.__init__(self, logfile="milter.log")
-
+        PGPMilter.__init__(self)
 
 def test_importable():
     # we can import pgp_milter
