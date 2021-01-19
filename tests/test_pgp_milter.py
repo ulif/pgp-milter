@@ -256,12 +256,11 @@ class TestPGPMilter(object):
 
     def test_eom_encrypting(self, home_dir, tpath):
         # eom() can encrypt messages
-        config = Namespace(pgphome=str(home_dir))
         milter = PGPTestMilter()
         key = (tpath / "alice3.pub").read_text()
         gpg = gnupg.GPG(gnupghome=str(home_dir))
         gpg.import_keys(key)
-        milter.config = config
+        milter.config.pgphome = str(home_dir)
         assert milter.connect() == Milter.CONTINUE
         with (tpath / "samples" / "full-mail01").open("rb") as fp:
             rc = milter.feedFile(fp, rcpt="alice@sample.net")
@@ -279,12 +278,11 @@ class TestPGPMilter(object):
     def test_eom_leaves_headercontent(self, home_dir, tpath):
         # headerfields might be moved, but are not changed
         # We try to leave headerfields untouched.
-        config = Namespace(pgphome=str(home_dir))
         milter = PGPTestMilter()
         key = (tpath / "alice3.pub").read_text()
         gpg = gnupg.GPG(gnupghome=str(home_dir))
         gpg.import_keys(key)
-        milter.config = config
+        milter.config.pgphome = str(home_dir)
         assert milter.connect() == Milter.CONTINUE
         with (tpath / "samples" / "full-mail03").open("rb") as fp:
             rc = milter.feedFile(fp, rcpt="alice@sample.net")
