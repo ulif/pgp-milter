@@ -73,6 +73,7 @@ class PGPMilter(Milter.Base):
         self.fp = None
         self.headers_seen = []
         self.rcpts = []
+        self.config = handle_options(None)
 
     @Milter.noreply
     def connect(self, ip_name, family, hostaddr):
