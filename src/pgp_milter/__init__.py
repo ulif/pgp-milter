@@ -151,7 +151,7 @@ class PGPMilter(Milter.Base):
         self.update_headers(msg, new_msg)
         fp = BytesIO(new_msg.as_bytes().split(b'\n\n', 1)[1])
         while True:
-            buf = fp.read(8192)
+            buf = fp.read(self.config.bufsize)
             if len(buf) == 0:
                 break
             self.replacebody(buf)
