@@ -134,7 +134,7 @@ class PGPMilter(Milter.Base):
     def body(self, chunk):
         """Called for each chunk of message body.
         """
-        if self.fp:
+        if self.fp:               # pragma: no branch
             self.fp.write(chunk)
         return Milter.CONTINUE
 
