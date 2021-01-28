@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 import Milter
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 from email import message_from_binary_file
 from email.policy import default as default_policy
 from io import BytesIO
@@ -73,7 +73,7 @@ class PGPMilter(Milter.Base):
         self.fp = None
         self.headers_seen = []
         self.rcpts = []
-        self.config = handle_options(None)
+        self.config = Namespace(**get_config_dict())
 
     @Milter.noreply
     def connect(self, ip_name, family, hostaddr):
