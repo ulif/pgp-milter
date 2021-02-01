@@ -292,3 +292,11 @@ def test_prepare_pgp_lookups_ok(home_dir, tpath):
     conf = Namespace(pgphome=str(pgphome))
     pgphome.mkdir()
     assert pgp.prepare_pgp_lookups(conf) is None
+
+
+def test_contains_encrypted(tpath):
+    # we can detect already encrypted messages
+    with (tpath / "samples/full-mail01-enc").open("r") as fp:
+        mime_msg = Parser(policy=default_policy).parse(fp)
+    assert pgp.contains_encrypted(mime_msg) is True
+
