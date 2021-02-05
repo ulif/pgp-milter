@@ -154,15 +154,17 @@ def prepare_pgp_lookups(conf):
 
 def contains_encrypted(mime_msg):
     """Detect already encrypted MIME messages.
+
+    A message is MIME-OpenPGP-encrypted according to RFC 2015 if it is
+    multipart and contains parts with certain content types. This is, what we
+    check here.
+
+    This function also accepts single MIME parts of messages.
     """
     for key, val in mime_msg.items():
-        if key != "Content-Type":
-            continue
-        if val in ["multipart/encrypted", "application/pgp-encrypted"]:
+        if key == "Content-Type" and val in [
+                "multipart/encrypted", "application/pgp-encrypted"]:
             return True
-        if val.startswith("application/octet-stream"):
-            if b"-----BEGIN PGP MESSAGE-----\n" in mime_msg.get_content():
-                return True
     for part in mime_msg.iter_parts():
         if contains_encrypted(part):
             return True
