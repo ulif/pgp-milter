@@ -161,10 +161,9 @@ def contains_encrypted(mime_msg):
 
     This function also accepts single MIME parts of messages.
     """
-    for key, val in mime_msg.items():
-        if key == "Content-Type" and val in [
-                "multipart/encrypted", "application/pgp-encrypted"]:
-            return True
+    if mime_msg.get_content_type() in [
+            "multipart/encrypted", "application/pgp-encrypted"]:
+        return True
     for part in mime_msg.iter_parts():
         if contains_encrypted(part):
             return True
