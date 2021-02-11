@@ -306,4 +306,3 @@ def test_contains_no_encrypted(tpath):
     with (tpath / "samples/full-mail01").open("r") as fp:
         mime_msg = Parser(policy=default_policy).parse(fp)
     assert pgp.contains_encrypted(mime_msg) is False
-
