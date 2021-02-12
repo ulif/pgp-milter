@@ -4,4 +4,19 @@
 #
 #    pip-compile
 #
-pymilter==1.0.4           # via pgp-milter (setup.py)
+cffi==1.14.6
+    # via cryptography
+cryptography==3.4.8
+    # via pgpy
+pgpy==0.5.4
+    # via pgp-milter (setup.py)
+pyasn1==0.4.8
+    # via pgpy
+pycparser==2.20
+    # via cffi
+pymilter==1.0.4
+    # via pgp-milter (setup.py)
+python-gnupg==0.4.7
+    # via pgp-milter (setup.py)
+six==1.16.0
+    # via pgpy
