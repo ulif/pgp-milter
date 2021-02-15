@@ -6,12 +6,36 @@ import gnupg
 import email.mime.text
 import os
 import pathlib
+import pgpy
 import sys
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.parser import Parser
 from email.policy import default as default_policy
 from email.utils import parseaddr
+
+
+class MemoryKeyStore(object):
+    """Our common interface for handling keys.
+
+    The basic `KeyStore` stores keys in memory.
+    """
+    def __init__(self):
+        self._ring = pgpy.PGPKeyring()
+
+    def get_key_by_email_addr(self, addr):
+        result = None
+        email = parseaddr(addr)[1]
+        try:
+            with self._ring.key(addr) as key:
+                for uid in key.userids:
+                    if parseaddr(uid.email)[1] != email:
+                        continue
+                    if not result or result.created < key.created:
+                        result = key
+        except KeyError:
+            return None
+        return result
 
 
 def parse_raw(headers, body):
