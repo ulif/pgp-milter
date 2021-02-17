@@ -2,6 +2,8 @@
 #
 # tests for the `pgp` module.
 #
+import os
+import pgpy
 import pytest
 import re
 import gnupg
@@ -33,6 +35,17 @@ def replace_pgp_msg(text):
         text,
         flags=re.M + re.S,
     )
+
+
+class TestMemoryKeyStore(object):
+
+    def test_get_key_by_email_addr(self):
+        keystore = pgp.MemoryKeyStore()
+        assert keystore.get_key_by_email_addr("alice@sample.net") is None
+        keystore._ring.load(
+            os.path.join(os.path.dirname(__file__), "alice.pub"))
+        found = keystore.get_key_by_email_addr("alice@sample.net")
+        assert found.fingerprint == FPR_ALICE
 
 
 def test_parse_raw(tpath):
