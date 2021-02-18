@@ -22,6 +22,10 @@ FPR_ALICE3 = "CB0374057FD3EEC52D39B467524AE6A48F5EB464"
 FPR_BOB = "FDBE48E6FE58D021A5C8BE3B982AD46FA8789D5C"
 
 
+# Paths to PGP public keys
+PUBKEY_PATH_ALICE = os.path.join(os.path.dirname(__file__), "alice.pub")
+
+
 def replace_pgp_msg(text):
     # helper to remove pgp messages out of MIME containers.
     # pgp messages differ from each other when generated, even if they encrypt
@@ -42,8 +46,7 @@ class TestMemoryKeyStore(object):
     def test_get_key_by_email_addr(self):
         keystore = pgp.MemoryKeyStore()
         assert keystore.get_key_by_email_addr("alice@sample.net") is None
-        keystore._ring.load(
-            os.path.join(os.path.dirname(__file__), "alice.pub"))
+        keystore._ring.load(PUBKEY_PATH_ALICE)
         found = keystore.get_key_by_email_addr("alice@sample.net")
         assert found.fingerprint == FPR_ALICE
 
