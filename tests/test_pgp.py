@@ -3,7 +3,6 @@
 # tests for the `pgp` module.
 #
 import os
-import pgpy
 import pytest
 import re
 import gnupg
