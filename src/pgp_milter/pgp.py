@@ -24,6 +24,10 @@ class MemoryKeyStore(object):
         self._ring = pgpy.PGPKeyring()
 
     def get_key_by_email_addr(self, addr):
+        """Get key for email address `addr` or none if not found.
+
+        Also returns the last key created only, if there are multiple.
+        """
         result = None
         email = parseaddr(addr)[1]
         try:
