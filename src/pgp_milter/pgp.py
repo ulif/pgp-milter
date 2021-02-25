@@ -30,15 +30,14 @@ class MemoryKeyStore(object):
         """
         result = None
         email = parseaddr(addr)[1]
-        try:
-            with self._ring.key(addr) as key:
+        for fpr in self._ring.fingerprints("public", "primary"):
+            with self._ring.key(fpr) as key:
                 for uid in key.userids:
                     if parseaddr(uid.email)[1] != email:
                         continue
                     if not result or result.created < key.created:
                         result = key
-        except KeyError:
-            return None
+                        break
         return result
 
 

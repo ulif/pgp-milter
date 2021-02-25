@@ -23,6 +23,7 @@ FPR_BOB = "FDBE48E6FE58D021A5C8BE3B982AD46FA8789D5C"
 
 # Paths to PGP public keys
 PUBKEY_PATH_ALICE = os.path.join(os.path.dirname(__file__), "alice.pub")
+PUBKEY_PATH_ALICE3 = os.path.join(os.path.dirname(__file__), "alice3.pub")
 
 
 def replace_pgp_msg(text):
@@ -48,6 +49,14 @@ class TestMemoryKeyStore(object):
         keystore._ring.load(PUBKEY_PATH_ALICE)
         found = keystore.get_key_by_email_addr("alice@sample.net")
         assert found.fingerprint == FPR_ALICE
+
+    def test_get_key_by_email_addr_returns_newesst(self):
+        # in case of keys with matching UIDs we take the newest one.
+        keystore = pgp.MemoryKeyStore()
+        # import older (ALICE) and newer (ALICE3) key of alice@sample.net
+        keystore._ring.load([PUBKEY_PATH_ALICE, PUBKEY_PATH_ALICE3])
+        found = keystore.get_key_by_email_addr("alice@sample.net")
+        assert found.fingerprint == FPR_ALICE3
 
 
 def test_parse_raw(tpath):
