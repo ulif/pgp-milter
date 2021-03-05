@@ -23,6 +23,7 @@ FPR_BOB = "FDBE48E6FE58D021A5C8BE3B982AD46FA8789D5C"
 
 # Paths to PGP public keys
 PUBKEY_PATH_ALICE = os.path.join(os.path.dirname(__file__), "alice.pub")
+PUBKEY_PATH_ALICE2 = os.path.join(os.path.dirname(__file__), "alice2.pub")
 PUBKEY_PATH_ALICE3 = os.path.join(os.path.dirname(__file__), "alice3.pub")
 
 
@@ -49,6 +50,16 @@ class TestMemoryKeyStore(object):
         keystore._ring.load(PUBKEY_PATH_ALICE)
         found = keystore.get_key_by_email_addr("alice@sample.net")
         assert found.fingerprint == FPR_ALICE
+
+    def test_get_key_by_email_addr_overlapping(self):
+        # we only find exactly matching email addresses
+        keystore = pgp.MemoryKeyStore()
+        # load keys of alice@sample.net and thealice@sample.net
+        keystore._ring.load([PUBKEY_PATH_ALICE, PUBKEY_PATH_ALICE2])
+        key1 = keystore.get_key_by_email_addr("alice@sample.net")
+        key2 = keystore.get_key_by_email_addr("thealice@sample.net")
+        assert key1.fingerprint == FPR_ALICE
+        assert key2.fingerprint == FPR_ALICE2
 
     def test_get_key_by_email_addr_returns_newesst(self):
         # in case of keys with matching UIDs we take the newest one.
