@@ -40,6 +40,15 @@ class MemoryKeyStore(object):
                         break
         return result
 
+    def get_keys_for_recipients(self, recipients):
+        """Lookup keys for recipients.
+        """
+        if not isinstance(recipients, list):
+            recipients = [recipients]
+        keys = [self.get_key_by_email_addr(x)
+                for x in recipients if x is not None]
+        return [x for x in keys if x is not None]
+
 
 def parse_raw(headers, body):
     """Turn headers and body of an email into message
