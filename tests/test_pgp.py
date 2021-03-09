@@ -69,6 +69,11 @@ class TestMemoryKeyStore(object):
         found = keystore.get_key_by_email_addr("alice@sample.net")
         assert found.fingerprint == FPR_ALICE3
 
+    def test_get_keys_for_recipients(self):
+        keystore = pgp.MemoryKeyStore()
+        assert keystore.get_keys_for_recipients([]) == []
+        assert keystore.get_keys_for_recipients(["alice@sample.net"]) == []
+
 
 def test_parse_raw(tpath):
     # we can turn raw messages into Message objects
