@@ -23,31 +23,30 @@ class MemoryKeyStore(object):
     def __init__(self):
         self._ring = pgpy.PGPKeyring()
 
-    def get_key_by_email_addr(self, addr):
-        """Get key for email address `addr` or none if not found.
-
-        Also returns the last key created only, if there are multiple.
-        """
-        result = None
-        email = parseaddr(addr)[1]
-        for fpr in self._ring.fingerprints("public", "primary"):
-            with self._ring.key(fpr) as key:
-                for uid in key.userids:
-                    if parseaddr(uid.email)[1] != email:
-                        continue
-                    if not result or result.created < key.created:
-                        result = key
-                        break
-        return result
-
     def get_keys_for_recipients(self, recipients):
-        """Lookup keys for recipients.
+        """Get keys for email addresses in `recipients`
+
+        Looks up the local keys and returns a dict with email-key pairs for
+        all emails contained in recipients.
+
+        For emails not found we return `None`.
+
+        For each requested email address we also return the last key created
+        only, if there are multiple.
         """
         if not isinstance(recipients, list):
             recipients = [recipients]
-        keys = [self.get_key_by_email_addr(x)
-                for x in recipients if x is not None]
-        return [x for x in keys if x is not None]
+        found = dict([(parseaddr(x)[1], None) for x in recipients])
+        for fpr in self._ring.fingerprints("public", "primary"):
+            with self._ring.key(fpr) as key:
+                for uid in key.userids:
+                    addr = parseaddr(uid.email)[1]
+                    if addr not in found.keys():
+                        continue
+                    if not found[addr] or found[addr].created < key.created:
+                        found[addr] = key
+                        break
+        return found
 
 
 def parse_raw(headers, body):
