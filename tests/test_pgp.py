@@ -3,6 +3,7 @@
 # tests for the `pgp` module.
 #
 import os
+import pgpy
 import pytest
 import re
 import gnupg
@@ -69,6 +70,23 @@ class TestMemoryKeyStore(object):
         keystore._ring.load([PUBKEY_PATH_ALICE, PUBKEY_PATH_ALICE3])
         keys = keystore.get_keys_for_recipients("alice@sample.net")
         assert keys["alice@sample.net"].fingerprint == FPR_ALICE3
+
+    def test_add_key(self):
+        # we can store keys
+        keystore = pgp.MemoryKeyStore()
+        key, _ = pgpy.PGPKey.from_file(PUBKEY_PATH_ALICE)
+        assert keystore._ring.fingerprints("public", "primary") == set()
+        keystore.add_key(key)
+        stored = [x for x in keystore._ring.fingerprints("public", "primary")]
+        assert FPR_ALICE in stored
+
+    def test_add_key_uniq(self):
+        # we cannot add same key twice
+        keystore = pgp.MemoryKeyStore()
+        key, _ = pgpy.PGPKey.from_file(PUBKEY_PATH_ALICE)
+        keystore.add_key(key)
+        keystore.add_key(key)
+        assert len(keystore._ring.fingerprints("public", "primary")) == 1
 
 
 def test_parse_raw(tpath):

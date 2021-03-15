@@ -48,6 +48,11 @@ class MemoryKeyStore(object):
                         break
         return found
 
+    def add_key(self, key):
+        """ Add new key.
+        """
+        self._ring.load(key)
+
 
 def parse_raw(headers, body):
     """Turn headers and body of an email into message
