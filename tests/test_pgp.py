@@ -71,6 +71,15 @@ class TestMemoryKeyStore(object):
         keys = keystore.get_keys_for_recipients("alice@sample.net")
         assert keys["alice@sample.net"].fingerprint == FPR_ALICE3
 
+    def test_get_keys_for_recipients_accepts_list(self):
+        # we also accept a list of addresses as parameter
+        keystore = pgp.MemoryKeyStore()
+        keystore._ring.load([PUBKEY_PATH_ALICE, PUBKEY_PATH_ALICE2])
+        keys = keystore.get_keys_for_recipients(
+            ["alice@sample.net", "thealice@sample.net"])
+        assert sorted(keys.keys()) == ["alice@sample.net", "thealice@sample.net"]
+
+
     def test_add_key(self):
         # we can store keys
         keystore = pgp.MemoryKeyStore()
