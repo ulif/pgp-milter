@@ -77,8 +77,8 @@ class TestMemoryKeyStore(object):
         keystore._ring.load([PUBKEY_PATH_ALICE, PUBKEY_PATH_ALICE2])
         keys = keystore.get_keys_for_recipients(
             ["alice@sample.net", "thealice@sample.net"])
-        assert sorted(keys.keys()) == ["alice@sample.net", "thealice@sample.net"]
-
+        assert sorted(
+            keys.keys()) == ["alice@sample.net", "thealice@sample.net"]
 
     def test_add_key(self):
         # we can store keys
