@@ -369,3 +369,12 @@ def test_contains_no_encrypted(tpath):
     with (tpath / "samples/full-mail01").open("r") as fp:
         mime_msg = Parser(policy=default_policy).parse(fp)
     assert pgp.contains_encrypted(mime_msg) is False
+
+
+def test_contains_encrypted_in_sub_part(tpath):
+    # we can detect encrypted stuff in sub parts of MIME messages
+    with (tpath / "samples/full-mail01-enc").open("r") as fp:
+        mime_msg = Parser(policy=default_policy).parse(fp)
+        # set wrong main type to enforce deeper digging
+        mime_msg.set_type('multipart/related')
+    assert pgp.contains_encrypted(mime_msg) is True
