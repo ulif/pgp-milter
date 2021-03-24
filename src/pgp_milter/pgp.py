@@ -43,7 +43,9 @@ class MemoryKeyStore(object):
                     addr = parseaddr(uid.email)[1]
                     if addr not in found.keys():
                         continue
-                    if not found[addr] or found[addr].created < key.created:
+                    # we cannot enforce a certain order of keys in this loop
+                    if not found[addr] or (                # pragma: no branch
+                        found[addr].created < key.created):
                         found[addr] = key
                         break
         return found
