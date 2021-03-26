@@ -45,7 +45,7 @@ class MemoryKeyStore(object):
                         continue
                     # we cannot enforce a certain order of keys in this loop
                     if not found[addr] or (                # pragma: no branch
-                        found[addr].created < key.created):
+                            found[addr].created < key.created):
                         found[addr] = key
                         break
         return found
