@@ -23,7 +23,7 @@ class MemoryKeyStore(object):
     def __init__(self):
         self._ring = pgpy.PGPKeyring()
 
-    def get_keys_for_recipients(self, recipients):
+    def get_recipients_keys(self, recipients):
         """Get keys for email addresses in `recipients`
 
         Looks up the local keys and returns a dict with email-key pairs for
@@ -54,6 +54,20 @@ class MemoryKeyStore(object):
         """ Add new key.
         """
         self._ring.load(key)
+
+
+class KeyManager(object):
+
+    def __init__(self):
+        self._key_store = MemoryKeyStore()
+
+    def get_recipients_keys(self, recipients):
+        """Get public keys of `recipients`
+        """
+        return self._key_store.get_recipients_keys(recipients)
+
+    def add_key(self, key):
+        self._key_store.add_key(key)
 
 
 def parse_raw(headers, body):
