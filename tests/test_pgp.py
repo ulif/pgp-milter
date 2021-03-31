@@ -45,37 +45,37 @@ def replace_pgp_msg(text):
 
 class TestMemoryKeyStore(object):
 
-    def test_get_keys_for_recipients(self):
+    def test_get_recipients_keys(self):
         keystore = pgp.MemoryKeyStore()
-        keys = keystore.get_keys_for_recipients("alice@sample.net")
+        keys = keystore.get_recipients_keys("alice@sample.net")
         assert keys["alice@sample.net"] is None
         keystore._ring.load(PUBKEY_PATH_ALICE)
-        keys = keystore.get_keys_for_recipients("alice@sample.net")
+        keys = keystore.get_recipients_keys("alice@sample.net")
         assert keys["alice@sample.net"].fingerprint == FPR_ALICE
 
-    def test_get_keys_for_recipients_overlapping(self):
+    def test_get_recipients_keys_overlapping(self):
         # we only find exactly matching email addresses
         keystore = pgp.MemoryKeyStore()
         # load keys of alice@sample.net and thealice@sample.net
         keystore._ring.load([PUBKEY_PATH_ALICE, PUBKEY_PATH_ALICE2])
-        keys1 = keystore.get_keys_for_recipients("alice@sample.net")
-        keys2 = keystore.get_keys_for_recipients("thealice@sample.net")
+        keys1 = keystore.get_recipients_keys("alice@sample.net")
+        keys2 = keystore.get_recipients_keys("thealice@sample.net")
         assert keys1["alice@sample.net"].fingerprint == FPR_ALICE
         assert keys2["thealice@sample.net"].fingerprint == FPR_ALICE2
 
-    def test_get_keys_for_recipients_returns_newesst(self):
+    def test_get_recipients_keys_returns_newesst(self):
         # in case of keys with matching UIDs we take the newest one.
         keystore = pgp.MemoryKeyStore()
         # import older (ALICE) and newer (ALICE3) key of alice@sample.net
         keystore._ring.load([PUBKEY_PATH_ALICE, PUBKEY_PATH_ALICE3])
-        keys = keystore.get_keys_for_recipients("alice@sample.net")
+        keys = keystore.get_recipients_keys("alice@sample.net")
         assert keys["alice@sample.net"].fingerprint == FPR_ALICE3
 
-    def test_get_keys_for_recipients_accepts_list(self):
+    def test_get_recipients_keys_accepts_list(self):
         # we also accept a list of addresses as parameter
         keystore = pgp.MemoryKeyStore()
         keystore._ring.load([PUBKEY_PATH_ALICE, PUBKEY_PATH_ALICE2])
-        keys = keystore.get_keys_for_recipients(
+        keys = keystore.get_recipients_keys(
             ["alice@sample.net", "thealice@sample.net"])
         assert sorted(
             keys.keys()) == ["alice@sample.net", "thealice@sample.net"]
@@ -96,6 +96,19 @@ class TestMemoryKeyStore(object):
         keystore.add_key(key)
         keystore.add_key(key)
         assert len(keystore._ring.fingerprints("public", "primary")) == 1
+
+
+class TestKeyManager(object):
+
+    def test_get_recipients_keys(self):
+        # we can get keys for recipients
+        key_mgr = pgp.KeyManager()
+        found = key_mgr.get_recipients_keys("alice@sample.net")
+        assert found == {'alice@sample.net': None}
+        key, _ = pgpy.PGPKey.from_file(PUBKEY_PATH_ALICE)
+        key_mgr.add_key(key)
+        found = key_mgr.get_recipients_keys("alice@sample.net")
+        assert found["alice@sample.net"].fingerprint == FPR_ALICE
 
 
 def test_parse_raw(tpath):
