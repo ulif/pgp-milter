@@ -97,14 +97,15 @@ def gpg_encrypt(gpg_env, text, fpr):
     return gpg_env.encrypt(text, fpr, always_trust=True)
 
 
-def pgp_mime_encrypt(gpg_env, mime_msg, fpr):
+def pgp_mime_encrypt(mime_msg, key):
     """Create PGP encrypted message from ordinary MIME message
 
     The returned multipart MIME container should conform to RFC 3156.
     """
     headers = mime_msg.items()
-    to_encrypt = get_encryptable_payload(mime_msg)
-    enc_msg = gpg_encrypt(gpg_env, to_encrypt.as_string(), fpr)
+    payload = get_encryptable_payload(mime_msg).as_string()
+    msg = pgpy.PGPMessage.new(payload)
+    enc_msg = key.encrypt(msg)
     multipart_container = MIMEMultipart(
         "encrypted", protocol="application/pgp-encrypted"
     )

@@ -175,10 +175,9 @@ def test_gpg_encrypt_multiple_recipients(tmpdir, tpath):
 
 def test_pgp_mime_encrypt(tmpdir, tpath):
     # we can create PGP-MIME messages from MIME
-    gpg = gnupg.GPG(gnupghome=str(tmpdir))
-    gpg.import_keys((tpath / "alice.pub").read_text())
+    key, _ = pgpy.PGPKey.from_file(str(tpath / "alice.pub"))
     mime_msg = MIMEText(_text="meet me at dawn")
-    result = pgp.pgp_mime_encrypt(gpg, mime_msg, FPR_ALICE)
+    result = pgp.pgp_mime_encrypt(mime_msg, key)
     result.set_boundary("===============1111111111111111111==")
     expected = replace_pgp_msg(
         (tpath / "samples/mime-enc-body").read_text()
@@ -188,11 +187,10 @@ def test_pgp_mime_encrypt(tmpdir, tpath):
 
 def test_pgp_mime_encrypt_fullmail(tmpdir, tpath):
     # we can encrypt a complete message
-    gpg = gnupg.GPG(gnupghome=str(tmpdir))
-    gpg.import_keys((tpath / "alice.pub").read_text())
+    key, _ = pgpy.PGPKey.from_file(str(tpath / "alice.pub"))
     with (tpath / "samples/full-mail02").open() as fp:
         msg = Parser(policy=default_policy).parse(fp)
-    result = pgp.pgp_mime_encrypt(gpg, msg, FPR_ALICE)
+    result = pgp.pgp_mime_encrypt(msg, key)
     assert result.keys() == [
         "Return-Path", "Received", "Date", "From", "To", "Subject",
         "Message-ID", "User-Agent", "Content-Type", "MIME-Version",
