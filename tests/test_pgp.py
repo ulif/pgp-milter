@@ -177,7 +177,7 @@ def test_pgp_mime_encrypt(tmpdir, tpath):
     # we can create PGP-MIME messages from MIME
     key, _ = pgpy.PGPKey.from_file(str(tpath / "alice.pub"))
     mime_msg = MIMEText(_text="meet me at dawn")
-    result = pgp.pgp_mime_encrypt(mime_msg, key)
+    result = pgp.pgp_mime_encrypt(mime_msg, [key, ])
     result.set_boundary("===============1111111111111111111==")
     expected = replace_pgp_msg(
         (tpath / "samples/mime-enc-body").read_text()
@@ -190,7 +190,7 @@ def test_pgp_mime_encrypt_fullmail(tmpdir, tpath):
     key, _ = pgpy.PGPKey.from_file(str(tpath / "alice.pub"))
     with (tpath / "samples/full-mail02").open() as fp:
         msg = Parser(policy=default_policy).parse(fp)
-    result = pgp.pgp_mime_encrypt(msg, key)
+    result = pgp.pgp_mime_encrypt(msg, [key, ])
     assert result.keys() == [
         "Return-Path", "Received", "Date", "From", "To", "Subject",
         "Message-ID", "User-Agent", "Content-Type", "MIME-Version",
