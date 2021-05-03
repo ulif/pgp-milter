@@ -288,56 +288,61 @@ def test_get_fingerprints_matching_names(tmpdir, tpath):
 
 def test_encrypt_msg(tmpdir, tpath):
     # we can encrypt a message
-    gpg = gnupg.GPG(gnupghome=str(tmpdir))
-    gpg.import_keys((tpath / "alice3.pub").read_text())
+    key_mgr = pgp.KeyManager()
+    key_mgr.add_key(pgpy.PGPKey.from_file(str(tpath / "alice3.pub"))[0])
     with (tpath / "samples/full-mail02").open("r") as fp:
         msg = Parser(policy=default_policy).parse(fp)
-    result = pgp.encrypt_msg(msg, ["alice@sample.net"], str(tmpdir))
+    result = pgp.encrypt_msg(msg, ["alice@sample.net"], key_mgr)
     assert result[0] is True
     enc_msg = result[1].as_string()
     assert "-----BEGIN PGP MESSAGE-----" in enc_msg
     assert result[1]['Content-Type'].startswith('multipart/encrypted')
-    gpg.import_keys((tpath / "alice3.sec").read_text())
-    dec_msg = gpg.decrypt(enc_msg)
-    assert dec_msg.ok is True
-    assert dec_msg.data == (
-        b'Content-Type: text/plain; charset=us-ascii\n'
-        b'Content-Disposition: inline\n\nfoo bar baz\n\n')
-    assert dec_msg.data == msg.as_bytes()
+    priv_key, _ = pgpy.PGPKey.from_file(str(tpath / "alice3.sec"))
+    enc_msg = pgpy.PGPMessage.from_blob(enc_msg)
+    dec_msg = priv_key.decrypt(enc_msg)
+    assert dec_msg.is_encrypted is False
+    assert dec_msg.message == (
+        'Content-Type: text/plain; charset=us-ascii\n'
+        'Content-Disposition: inline\n\nfoo bar baz\n\n')
+    assert dec_msg.message == msg.as_string()
 
 
 def test_encrypt_msg_no_key(tmpdir, tpath):
     # without key, we cannot encrypt
-    gpg = gnupg.GPG(gnupghome=str(tmpdir))
-    gpg.import_keys((tpath / "alice.pub").read_text())
+    key_mgr = pgp.KeyManager()
+    key, _ = pgpy.PGPKey.from_file(str(tpath / "alice.pub"))
+    key_mgr.add_key(key)
     with (tpath / "samples/full-mail02").open("r") as fp:
         msg = Parser(policy=default_policy).parse(fp)
-    changed, new_msg = pgp.encrypt_msg(msg, ["bob@sample.org"], str(tmpdir))
+    changed, new_msg = pgp.encrypt_msg(msg, ["bob@sample.org"], key_mgr)
     assert changed is False
     assert new_msg is msg
 
 
 def test_encrypt_msg_not_all_keys(tmpdir, tpath):
     # we do only encrypt if all keys are available
-    gpg = gnupg.GPG(gnupghome=str(tmpdir))
-    gpg.import_keys((tpath / "alice.pub").read_text())
+    key_mgr = pgp.KeyManager()
+    key, _ = pgpy.PGPKey.from_file(str(tpath / "alice.pub"))
+    key_mgr.add_key(key)
     with (tpath / "samples/full-mail02").open("r") as fp:
         msg = Parser(policy=default_policy).parse(fp)
     changed, new_msg = pgp.encrypt_msg(
-        msg, ["bob@sample.org", "alice@sample.net"], str(tmpdir))
+        msg, ["bob@sample.org", "alice@sample.net"], key_mgr)
     assert changed is False
     assert new_msg is msg
 
 
 def test_encrypt_msg_multi_rcpts(tmpdir, tpath):
     # we can encypt messages for multple recipients
-    gpg = gnupg.GPG(gnupghome=str(tmpdir))
-    gpg.import_keys((tpath / "alice.pub").read_text())
-    gpg.import_keys((tpath / "bob.pub").read_text())
+    key_mgr = pgp.KeyManager()
+    key1, _ = pgpy.PGPKey.from_file(str(tpath / "alice.pub"))
+    key2, _ = pgpy.PGPKey.from_file(str(tpath / "bob.pub"))
+    key_mgr.add_key(key1)
+    key_mgr.add_key(key2)
     with (tpath / "samples/full-mail02").open("r") as fp:
         msg = Parser(policy=default_policy).parse(fp)
     changed, new_msg = pgp.encrypt_msg(
-        msg, ["bob@sample.org", "alice@sample.net"], str(tmpdir))
+        msg, ["bob@sample.org", "alice@sample.net"], key_mgr)
     assert changed is True
     assert "-----BEGIN PGP MESSAGE-----" in new_msg.as_string()
 
@@ -347,9 +352,7 @@ def test_encrypt_msg_no_pgp_env(tmpdir, tpath):
     with (tpath / "samples/full-mail02").open("r") as fp:
         msg = Parser(policy=default_policy).parse(fp)
     changed, new_msg = pgp.encrypt_msg(
-        msg, ["bob@sample.org"], str(tmpdir / "nowhere"))
-    assert changed is False
-    assert new_msg is msg
+        msg, ["bob@sample.org"], None)
 
 
 def test_prepare_pgp_lookups(home_dir, tpath):

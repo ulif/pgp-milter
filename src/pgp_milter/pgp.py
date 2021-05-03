@@ -186,19 +186,18 @@ def get_fingerprints(gpg_env, recipients):
     return result
 
 
-def encrypt_msg(msg, recipients, gpg_env_path=None):
+def encrypt_msg(msg, recipients, key_manager=None):
     """Encrypt `msg` for `recipients` with gpg-env in `gpg_env_path`.
 
     Returns, whether changes happened and (possibly changed) message created.
     """
     changed = False
-    gpg = get_gpg(gpg_env_path)
-    if gpg is None:
+    if key_manager is None:
         return changed, msg
-    fprs = get_fingerprints(gpg, recipients)
-    if len(fprs) != len(recipients):
+    keys = key_manager.get_recipients_keys(recipients)
+    if None in keys.values():
         return False, msg
-    new_msg = pgp_mime_encrypt(gpg, msg, fprs)
+    new_msg = pgp_mime_encrypt(msg, list(keys.values()))
     return (True, new_msg)
 
 
