@@ -187,9 +187,12 @@ def get_fingerprints(gpg_env, recipients):
 
 
 def encrypt_msg(msg, recipients, key_manager=None):
-    """Encrypt `msg` for `recipients` with gpg-env in `gpg_env_path`.
+    """Encrypt `msg` for `recipients` with keys provided by `key_manager`.
 
-    Returns, whether changes happened and (possibly changed) message created.
+    Returns, whether changes happened andi the  (possibly changed) message.
+
+    If we cannot get keys for all recipients, the messag stays unchained.
+    Otherwise the message is encrypted with the keys of each recipient.
     """
     changed = False
     if key_manager is None:
