@@ -7,12 +7,17 @@ import email.mime.text
 import os
 import pathlib
 import pgpy
+import re
 import sys
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.parser import Parser
 from email.policy import default as default_policy
 from email.utils import parseaddr
+
+
+# The format of keyfiles
+RE_KEYFILENAME = re.compile("^OpenPGP_0x[0-9A-F]{16}\.asc$")
 
 
 class MemoryKeyStore(object):
@@ -56,8 +61,25 @@ class MemoryKeyStore(object):
         self._ring.load(key)
 
 
-class KeyManager(object):
+class DirectoryKeyStore(MemoryKeyStore):
+    def __init__(self, path):
+        super(DirectoryKeyStore, self).__init__()
+        self.path = path
 
+    def scan(self):
+        for entry in os.scandir(self.path):
+            if not entry.is_file():
+                continue
+            if not RE_KEYFILENAME.match(entry.name):
+                continue
+            path = os.path.join(os.path.abspath(self.path), entry.name)
+            try:
+                self._ring.load(os.path.abspath(path))
+            except ValueError:
+                pass
+
+
+class KeyManager(object):
     def __init__(self):
         self._key_store = MemoryKeyStore()
 
