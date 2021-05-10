@@ -98,6 +98,23 @@ class TestMemoryKeyStore(object):
         assert len(keystore._ring.fingerprints("public", "primary")) == 1
 
 
+class TestDirectoryKeyStore(object):
+
+    def test_scan(self, tmpdir):
+        # we can scan empty directories
+        keystore = pgp.DirectoryKeyStore(str(tmpdir))
+        keystore.scan()
+        assert list(keystore._ring) == []
+
+    def test_scan_single_file(self, tmpdir):
+        # we can detect valid key files
+        keystore = pgp.DirectoryKeyStore(str(tmpdir))
+        with open(PUBKEY_PATH_ALICE) as fp:
+            (tmpdir / ("OpenPGP_0x%s.asc" % FPR_ALICE[-16:])).write(fp.read())
+        keystore.scan()
+        assert FPR_ALICE in keystore._ring.fingerprints()
+
+
 class TestKeyManager(object):
 
     def test_get_recipients_keys(self):
