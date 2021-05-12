@@ -100,6 +100,20 @@ class TestMemoryKeyStore(object):
 
 class TestDirectoryKeyStore(object):
 
+    def test_re_keyfilename(self):
+        # the RE_KEYFILENAME regexp matches only expected strings
+        assert pgp.RE_KEYFILENAME.match("foo") is None
+        assert pgp.RE_KEYFILENAME.match(
+                "OpenPGP_0x0123456789ABCDEF.asc") is not None
+        assert pgp.RE_KEYFILENAME.match(
+                "OpenPGP_0x0123456789ABCDEFF.asc") is None
+        assert pgp.RE_KEYFILENAME.match(
+                "OpenPGP_0x0123456789ABCDE.asc") is None
+        assert pgp.RE_KEYFILENAME.match(
+                "OOpenPGP_0x0123456789ABCDEF.asc") is None
+        assert pgp.RE_KEYFILENAME.match(
+                "OpenPGP_0x0123456789ABCDEF-asc") is None
+
     def test_scan(self, tmpdir):
         # we can scan empty directories
         keystore = pgp.DirectoryKeyStore(str(tmpdir))
