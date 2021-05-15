@@ -17,7 +17,7 @@ from email.utils import parseaddr
 
 
 # The format of keyfiles
-RE_KEYFILENAME = re.compile("^OpenPGP_0x[0-9A-F]{16}\.asc$")
+RE_KEYFILENAME = re.compile(r"^OpenPGP_0x[0-9A-F]{16}\.asc$")
 
 
 class MemoryKeyStore(object):
