@@ -120,13 +120,28 @@ class TestDirectoryKeyStore(object):
         keystore.scan()
         assert list(keystore._ring) == []
 
-    def test_scan_single_file(self, tmpdir):
+    def test_scan_single_key(self, tmpdir):
         # we can detect valid key files
         keystore = pgp.DirectoryKeyStore(str(tmpdir))
         with open(PUBKEY_PATH_ALICE) as fp:
             (tmpdir / ("OpenPGP_0x%s.asc" % FPR_ALICE[-16:])).write(fp.read())
         keystore.scan()
         assert FPR_ALICE in keystore._ring.fingerprints()
+
+    def test_scan_file_not_key(self, tmpdir):
+        # we ignore files that are not keys, silently
+        keystore = pgp.DirectoryKeyStore(str(tmpdir))
+        (tmpdir / ("OpenPGP_0x%s.asc" % FPR_ALICE[-16:])).write("not-a-key")
+        keystore.scan()
+        assert list(keystore._ring) == []
+
+    def test_scan_file_directory(self, tmpdir):
+        # in scans we ignore directories
+        keystore = pgp.DirectoryKeyStore(str(tmpdir))
+        tmpdir.join("foo").ensure(dir=True)
+        tmpdir.join("bar").write("baz")
+        keystore.scan()
+        assert list(keystore._ring) == []
 
 
 class TestKeyManager(object):
