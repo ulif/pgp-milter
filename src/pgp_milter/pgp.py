@@ -75,7 +75,7 @@ class DirectoryKeyStore(MemoryKeyStore):
             path = os.path.join(os.path.abspath(self.path), entry.name)
             try:
                 self._ring.load(os.path.abspath(path))
-            except ValueError:
+            except (ValueError, pgpy.errors.PGPError):
                 pass
 
 
