@@ -16,7 +16,8 @@ from email.policy import default as default_policy
 from email.utils import parseaddr
 
 
-# The format of keyfiles
+# The format of keyfile names - OpenPGP_0x<16 uppercase hex digits>.asc
+# Sample: OpenPGP_0x0123456789ABCDEF.asc
 RE_KEYFILENAME = re.compile(r"^OpenPGP_0x[0-9A-F]{16}\.asc$")
 
 
@@ -62,11 +63,23 @@ class MemoryKeyStore(object):
 
 
 class DirectoryKeyStore(MemoryKeyStore):
+    """A key store that stores keys in a simple directory in `path`.
+
+    Keyfiles are expected to be ASCII-armored public keys with a filename that
+    matches `RE_KEYFILENAME` pattern. Other files or keyfiles that cannot be
+    loaded are silently discarded.
+
+    The `path` must exists beforehand and be a directory.
+    """
     def __init__(self, path):
         super(DirectoryKeyStore, self).__init__()
         self.path = path
 
     def scan(self):
+        """Scan instance `path` for PGP public keys.
+
+        Found keys are added to local `pgpy.PGPKeyRing`.
+        """
         for entry in os.scandir(self.path):
             if not entry.is_file():
                 continue
