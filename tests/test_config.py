@@ -1,3 +1,4 @@
+import os
 from pgp_milter.config import (
     OPTIONS_DEFAULTS,
     config_paths,
@@ -26,9 +27,10 @@ def test_get_config_dict(home_dir, monkeypatch):
     conf_path1.write("[pgpmilter]\nsocket = foo\ndebug = yes")
     conf_path2.write("[pgpmilter]\nsocket = bar\n")
     result = get_config_dict()
+    pgphome = home_dir.join(".pgphome")
     assert result == {
         'debug': True, 'socket': 'bar', 'timeout': 300,
-        'bufsize': 8192, 'pgphome': '~/.pgphome'
+        'bufsize': 8192, 'pgphome': pgphome
     }
 
 
