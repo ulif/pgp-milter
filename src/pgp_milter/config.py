@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
 import pathlib
 from configparser import ConfigParser
 
@@ -41,6 +40,5 @@ def get_config_dict():
             result[key] = parser.getint("pgpmilter", key)
         else:
             result[key] = parser.get("pgpmilter", key).strip("\"'")
-    result["pgphome"] = os.path.abspath(
-        os.path.expanduser(result["pgphome"]))
+    result["pgphome"] = str(pathlib.Path(result["pgphome"]).expanduser())
     return result
