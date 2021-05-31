@@ -6,6 +6,7 @@ import Milter.testctx
 from argparse import Namespace
 from io import BytesIO
 from Milter.test import TestBase as MilterTestBase
+from pathlib import Path
 from pgp_milter import (
     __version__,
     handle_options,
@@ -49,7 +50,7 @@ def test_handle_options_defaults():
     assert args.debug is False
     assert args.socket == "inet6:30072@[::1]"
     assert args.timeout == 300
-    assert args.pgphome == "~/.pgphome"
+    assert args.pgphome == str(Path(Path.home(), ".pgphome"))
 
 
 def test_handle_options_debug():
