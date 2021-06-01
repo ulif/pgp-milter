@@ -6,7 +6,7 @@ from email import message_from_binary_file
 from email.policy import default as default_policy
 from io import BytesIO
 from pgp_milter.config import get_config_dict
-from pgp_milter.pgp import encrypt_msg, prepare_pgp_lookups
+from pgp_milter.pgp import encrypt_msg, prepare_pgp_lookups, KeyManager
 
 
 __version__ = "0.1.dev0"  # set also in setup.py
@@ -74,6 +74,7 @@ class PGPMilter(Milter.Base):
         self.headers_seen = []
         self.rcpts = []
         self.config = Namespace(**get_config_dict())
+        self.key_mgr = KeyManager(path=self.config.pgphome)
 
     @Milter.noreply
     def connect(self, ip_name, family, hostaddr):
@@ -145,7 +146,7 @@ class PGPMilter(Milter.Base):
                 "X-PGPMilter", "Scanned by PGPMilter %s" % __version__, -1)
         self.fp.seek(0)
         msg = message_from_binary_file(self.fp, policy=default_policy)
-        changed, new_msg = encrypt_msg(msg, self.rcpts, self.config.pgphome)
+        changed, new_msg = encrypt_msg(msg, self.rcpts, self.key_mgr)
         if not changed:
             return Milter.ACCEPT
         self.update_headers(msg, new_msg)
