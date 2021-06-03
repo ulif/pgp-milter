@@ -1,7 +1,9 @@
 import gnupg
 import mime
 import pgp_milter
+import pgpy
 import pytest
+import re
 import Milter.testctx
 from argparse import Namespace
 from io import BytesIO
@@ -21,6 +23,12 @@ except ImportError:  # Python < 3.8 # NOQA  # pragma: no cover
 
 import pathlib
 TESTS = pathlib.Path(__file__).parent
+
+
+# A regular expression matching PGP MESSAGE blocks
+RE_PGPMSG = re.compile(
+    b".*(-----BEGIN PGP MESSAGE-----\n(.*)\n"
+    b"-----END PGP MESSAGE-----\n).*", re.S)
 
 
 class PGPTestMilter(MilterTestBase, PGPMilter):
@@ -258,33 +266,33 @@ class TestPGPMilter(object):
 
     def test_eom_encrypting(self, home_dir, tpath):
         # eom() can encrypt messages
+        key = tpath.joinpath("alice3.pub").read_text()
+        # must place keys before initializing the milter...
+        home_dir.join(".pgphome", "OpenPGP_0x00000000000000A3.asc").write(key)
         milter = PGPTestMilter()
-        key = (tpath / "alice3.pub").read_text()
-        gpg = gnupg.GPG(gnupghome=str(home_dir))
-        gpg.import_keys(key)
-        milter.config.pgphome = str(home_dir)
         assert milter.connect() == Milter.CONTINUE
-        with (tpath / "samples" / "full-mail01").open("rb") as fp:
+        with tpath.joinpath("samples", "full-mail01").open("rb") as fp:
             rc = milter.feedFile(fp, rcpt="alice@sample.net")
             assert rc == Milter.ACCEPT
         assert "X-PGPMilter" in milter._msg.keys()
         assert milter._bodyreplaced is True
+        priv_key, _ = pgpy.PGPKey.from_file(str(tpath / "alice3.sec"))
         milter._body.seek(0)
-        gpg.import_keys((tpath / "alice3.sec").read_text())
-        dec_msg = gpg.decrypt(milter._body.read())
-        assert dec_msg.ok is True
-        assert dec_msg.data.startswith(
-                b'Content-Type: multipart/alternative;')
+        enc_msg = RE_PGPMSG.match(milter._body.read()).groups()[0]
+        dec_msg = priv_key.decrypt(
+            pgpy.PGPMessage.from_blob(enc_msg))
+        assert dec_msg.is_encrypted is False
+        assert dec_msg.message.startswith(
+                'Content-Type: multipart/alternative;')
         milter.logfp.close()
 
     def test_eom_leaves_headercontent(self, home_dir, tpath):
         # headerfields might be moved, but are not changed
         # We try to leave headerfields untouched.
+        key = tpath.joinpath("alice3.pub").read_text()
+        # must place keys before initializing the milter...
+        home_dir.join(".pgphome", "OpenPGP_0x00000000000000A3.asc").write(key)
         milter = PGPTestMilter()
-        key = (tpath / "alice3.pub").read_text()
-        gpg = gnupg.GPG(gnupghome=str(home_dir))
-        gpg.import_keys(key)
-        milter.config.pgphome = str(home_dir)
         assert milter.connect() == Milter.CONTINUE
         with (tpath / "samples" / "full-mail03").open("rb") as fp:
             rc = milter.feedFile(fp, rcpt="alice@sample.net")
