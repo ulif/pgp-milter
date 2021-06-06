@@ -1,4 +1,3 @@
-import gnupg
 import mime
 import pgp_milter
 import pgpy
