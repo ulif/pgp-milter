@@ -2,7 +2,6 @@
 #
 # OpenPGP related stuff
 #
-import gnupg
 import email.mime.text
 import os
 import pathlib
@@ -117,18 +116,6 @@ def parse_raw(headers, body):
     str_headers = b"\n".join([b"%s: %s" % (k, v) for k, v in headers])
     raw_msg = "%s\n\n\n%s" % (str_headers.decode(), body.decode())
     return Parser(policy=default_policy).parsestr(raw_msg)
-
-
-def get_gpg(gpg_env_path):
-    """Get a GPG environment located in `gpg_env_path`.
-
-    The directory must exist before calling although it does not have to be
-    populated. If no gpg environment can be created, `None` is returned.
-    """
-    gpg_env_path = gpg_env_path and pathlib.Path(gpg_env_path).expanduser()
-    if gpg_env_path is None or not gpg_env_path.is_dir():
-        return None
-    return gnupg.GPG(gnupghome=str(gpg_env_path))
 
 
 def gpg_encrypt(gpg_env, text, fpr):
