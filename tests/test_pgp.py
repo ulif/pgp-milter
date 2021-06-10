@@ -190,27 +190,6 @@ def test_parse_raw(tpath):
     assert isinstance(parsed, Message)
 
 
-def test_gpg_encrypt(tmpdir, tpath):
-    # we can pgp encrypt text
-    gpg = gnupg.GPG(gnupghome=str(tmpdir))
-    ascii_key = (tpath / "alice.pub").read_text()
-    gpg.import_keys(ascii_key)
-    msg = pgp.gpg_encrypt(gpg, "meet me at dawn", FPR_ALICE)
-    assert str(msg).startswith("-----BEGIN PGP MESSAGE-----")
-    assert len(str(msg)) < 1000
-
-
-def test_gpg_encrypt_multiple_recipients(tmpdir, tpath):
-    # we can encrypt for several recipients in a row
-    gpg = gnupg.GPG(gnupghome=str(tmpdir))
-    ascii_key1 = (tpath / "alice.pub").read_text()
-    ascii_key2 = (tpath / "bob.pub").read_text()
-    gpg.import_keys(ascii_key1 + ascii_key2)
-    msg = pgp.gpg_encrypt(gpg, "meet me at dawn", [FPR_ALICE, FPR_BOB])
-    assert str(msg).startswith("-----BEGIN PGP MESSAGE-----")
-    assert len(str(msg)) >= 1000
-
-
 def test_pgp_mime_encrypt(tmpdir, tpath):
     # we can create PGP-MIME messages from MIME
     key, _ = pgpy.PGPKey.from_file(str(tpath / "alice.pub"))

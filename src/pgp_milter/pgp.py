@@ -118,12 +118,6 @@ def parse_raw(headers, body):
     return Parser(policy=default_policy).parsestr(raw_msg)
 
 
-def gpg_encrypt(gpg_env, text, fpr):
-    """Encrypt `text` for fingerprint `fpr`.
-    """
-    return gpg_env.encrypt(text, fpr, always_trust=True)
-
-
 def pgp_mime_encrypt(mime_msg, keys):
     """Create PGP encrypted message from ordinary MIME message
 
