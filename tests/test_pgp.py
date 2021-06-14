@@ -6,7 +6,6 @@ import os
 import pgpy
 import pytest
 import re
-import gnupg
 from argparse import Namespace
 from email.mime.text import MIMEText
 from email.message import Message
@@ -256,51 +255,6 @@ def test_prepend_headerfields_as_header_objs():
         ('To', 'foo'),
         ('From', 'bar'),
         ('Subject', '=?unknown-8bit?b?ZsO2w7Y=?=')]
-
-
-def test_get_fingerprints_no_match(tmpdir):
-    # we find only existing fingerprints
-    gpg = gnupg.GPG(gnupghome=str(tmpdir))
-    result1 = pgp.get_fingerprints(gpg, ["alice@sample.net", "bob@sample.org"])
-    assert result1 == []
-
-
-def test_get_fingerprints_one_match(tmpdir, tpath):
-    # we find a fingerprint, if it is stored
-    gpg = gnupg.GPG(gnupghome=str(tmpdir))
-    gpg.import_keys((tpath / "alice.pub").read_text())
-    result1 = pgp.get_fingerprints(gpg, ["alice@sample.net", "bob@sample.org"])
-    assert result1 == [FPR_ALICE]
-
-
-def test_get_fingerprints_string_input(tmpdir, tpath):
-    # we find a fingerprint also if we pass it as string
-    # and not a list of strings
-    gpg = gnupg.GPG(gnupghome=str(tmpdir))
-    gpg.import_keys((tpath / "alice.pub").read_text())
-    result1 = pgp.get_fingerprints(gpg, "alice@sample.net")
-    assert result1 == [FPR_ALICE]
-
-
-def test_get_fingerprints_overlapping_names(tmpdir, tpath):
-    # we only find exactly matching fingerprints
-    gpg = gnupg.GPG(gnupghome=str(tmpdir))
-    # the key of "alice@sample.net"
-    gpg.import_keys((tpath / "alice.pub").read_text())
-    # this is the key of "thealice@sample.net"
-    gpg.import_keys((tpath / "alice2.pub").read_text())
-    assert [FPR_ALICE] == pgp.get_fingerprints(gpg, "alice@sample.net")
-    assert [FPR_ALICE2] == pgp.get_fingerprints(gpg, "thealice@sample.net")
-
-
-def test_get_fingerprints_matching_names(tmpdir, tpath):
-    # in case of keys with matching UIDs we take the newest one.
-    gpg = gnupg.GPG(gnupghome=str(tmpdir))
-    # the older key of "alice@sample.net"
-    gpg.import_keys((tpath / "alice.pub").read_text())
-    # this is a newer key of "alice@sample.net"
-    gpg.import_keys((tpath / "alice3.pub").read_text())
-    assert [FPR_ALICE3] == pgp.get_fingerprints(gpg, "alice@sample.net")
 
 
 def test_encrypt_msg(tmpdir, tpath):

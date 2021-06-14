@@ -181,32 +181,6 @@ def prepend_header_fields(msg, headers):
     return msg
 
 
-def get_fingerprints(gpg_env, recipients):
-    """Get the recipients fingerprints.
-
-    We only return those fingerprints, that match passed email addresses
-    completely and at most one fingerprint per given email.
-    """
-    if not isinstance(recipients, list):
-        recipients = [recipients]
-    email_addrs = [parseaddr(x)[1] for x in recipients]
-    result = []
-    for addr in email_addrs:
-        addr_results = []
-        gpg_keys = gpg_env.list_keys(keys=[addr])
-        for gpg_key in gpg_keys:
-            for uid in gpg_key["uids"]:
-                name, uid_addr = parseaddr(uid)
-                if uid_addr == addr:
-                    addr_results.append(gpg_key)
-                    break
-        if len(addr_results):
-            result.append(
-                sorted(
-                    addr_results, key=lambda x: x['date'])[-1]["fingerprint"])
-    return result
-
-
 def encrypt_msg(msg, recipients, key_manager=None):
     """Encrypt `msg` for `recipients` with keys provided by `key_manager`.
 
