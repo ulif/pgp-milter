@@ -16,7 +16,5 @@ pycparser==2.20
     # via cffi
 pymilter==1.0.4
     # via pgp-milter (setup.py)
-python-gnupg==0.4.7
-    # via pgp-milter (setup.py)
 six==1.16.0
     # via pgpy

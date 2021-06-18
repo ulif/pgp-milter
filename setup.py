@@ -8,7 +8,6 @@ def read(fname):
 
 install_requires = [
     "pymilter",
-    "python-gnupg",
     "PGPy",
 ]
 
