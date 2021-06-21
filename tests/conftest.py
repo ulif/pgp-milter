@@ -34,3 +34,4 @@ def reset_config(monkeypatch):
     """Reset PGPMilter.config before/after each test.
     """
     monkeypatch.setattr("pgp_milter.PGPMilter.config", None)
+    monkeypatch.setattr("pgp_milter.PGPMilter.key_mgr", None)

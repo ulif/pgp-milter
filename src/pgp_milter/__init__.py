@@ -63,6 +63,7 @@ class PGPMilter(Milter.Base):
     """
 
     config = None
+    key_mgr = None
 
     def __init__(self):
         self._id = Milter.uniqueID()
