@@ -1,6 +1,8 @@
+import copy
 import os
 import pathlib
 import pytest
+from pgp_milter import PGPMilter
 
 
 PATH_OF_TESTS = pathlib.Path(__file__).parent
@@ -30,8 +32,13 @@ def home_dir(request, monkeypatch, tmpdir):
 
 
 @pytest.fixture(scope="function", autouse=True)
-def reset_config(monkeypatch):
-    """Reset PGPMilter.config before/after each test.
+def reset_pgpmilter_class_vars(request, monkeypatch):
+    """Reset PGPMilter.config and PGPMilter.key_mgr after each test.
     """
-    monkeypatch.setattr("pgp_milter.PGPMilter.config", None)
-    monkeypatch.setattr("pgp_milter.PGPMilter.key_mgr", None)
+    std_config = copy.deepcopy(PGPMilter.config)
+    std_keymgr = copy.deepcopy(PGPMilter.key_mgr)
+
+    def teardown():
+        monkeypatch.setattr("pgp_milter.PGPMilter.config", std_config)
+        monkeypatch.setattr("pgp_milter.PGPMilter.key_mgr", std_keymgr)
+    request.addfinalizer(teardown)
