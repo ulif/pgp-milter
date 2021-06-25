@@ -62,7 +62,7 @@ class PGPMilter(Milter.Base):
     """A milter that currently does nothing.
     """
 
-    config = None
+    config = Namespace(**get_config_dict())
     key_mgr = None
 
     def __init__(self):
@@ -74,8 +74,6 @@ class PGPMilter(Milter.Base):
         self.fp = None
         self.headers_seen = []
         self.rcpts = []
-        self.config = Namespace(**get_config_dict())
-        self.key_mgr = KeyManager(path=self.config.pgphome)
 
     @Milter.noreply
     def connect(self, ip_name, family, hostaddr):
