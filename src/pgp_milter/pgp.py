@@ -94,11 +94,12 @@ class DirectoryKeyStore(MemoryKeyStore):
 class KeyManager(object):
     def __init__(self, path=None):
         self._path = path
-        self._key_store = MemoryKeyStore()
-        if path is not None:
-            self._path = os.path.abspath(path)
-            self._key_store = DirectoryKeyStore(self._path)
-            self._key_store.scan()
+        if self._path is None:
+            self._key_store = MemoryKeyStore()
+            return
+        self._path = os.path.abspath(path)
+        self._key_store = DirectoryKeyStore(self._path)
+        self._key_store.scan()
 
     def get_recipients_keys(self, recipients):
         """Get public keys of `recipients`
