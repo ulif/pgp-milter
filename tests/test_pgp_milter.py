@@ -119,7 +119,7 @@ def test_main_calls_run(monkeypatch):
     monkeypatch.setattr("sys.argv", ["scriptname"])
     monkeypatch.setattr("Milter.runmilter", mock_runmilter)
     monkeypatch.setattr("Milter._mock_vals", [], raising=False)
-    assert PGPMilter.config is None
+    assert PGPMilter.config.timeout == 200
     result = main()
     assert Milter.factory == PGPMilter
     assert Milter._mock_vals == ["pgpmilter", "inet6:30072@[::1]", 300]
