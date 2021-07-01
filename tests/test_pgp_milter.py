@@ -15,6 +15,7 @@ from pgp_milter import (
     PGPMilter,
 )
 from pgp_milter import run as run_main
+from pgp_milter.pgp import KeyManager
 try:
     import importlib.metadata as importlib_metadata
 except ImportError:  # Python < 3.8 # NOQA  # pragma: no cover
@@ -266,9 +267,9 @@ class TestPGPMilter(object):
     def test_eom_encrypting(self, home_dir, tpath):
         # eom() can encrypt messages
         key = tpath.joinpath("alice3.pub").read_text()
-        # must place keys before initializing the milter...
-        home_dir.join(".pgphome", "OpenPGP_0x00000000000000A3.asc").write(key)
         milter = PGPTestMilter()
+        home_dir.join(".pgphome", "OpenPGP_0x00000000000000A3.asc").write(key)
+        milter.key_mgr = KeyManager(path=str(home_dir / ".pgphome"))
         assert milter.connect() == Milter.CONTINUE
         with tpath.joinpath("samples", "full-mail01").open("rb") as fp:
             rc = milter.feedFile(fp, rcpt="alice@sample.net")
@@ -289,9 +290,9 @@ class TestPGPMilter(object):
         # headerfields might be moved, but are not changed
         # We try to leave headerfields untouched.
         key = tpath.joinpath("alice3.pub").read_text()
-        # must place keys before initializing the milter...
-        home_dir.join(".pgphome", "OpenPGP_0x00000000000000A3.asc").write(key)
         milter = PGPTestMilter()
+        home_dir.join(".pgphome", "OpenPGP_0x00000000000000A3.asc").write(key)
+        milter.key_mgr = KeyManager(path=str(home_dir / ".pgphome"))
         assert milter.connect() == Milter.CONTINUE
         with (tpath / "samples" / "full-mail03").open("rb") as fp:
             rc = milter.feedFile(fp, rcpt="alice@sample.net")
