@@ -182,6 +182,7 @@ def run(name, config):
     """
     Milter.factory = PGPMilter
     Milter.factory.config = config
+    Milter.factory.key_mgr = KeyManager(path=getattr(config, "pgphome", None))
     Milter.set_flags(Milter.ADDHDRS + Milter.CHGHDRS + Milter.CHGBODY)
     Milter.runmilter(name, config.socket, timeout=config.timeout)
 
