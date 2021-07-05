@@ -194,7 +194,6 @@ def main(argv=None):
     if args.version:
         print_version()
         sys.exit(0)
-    prepare_pgp_lookups(args)
     run('pgpmilter', args)
 
 
