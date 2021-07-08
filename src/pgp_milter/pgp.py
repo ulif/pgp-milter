@@ -200,15 +200,6 @@ def encrypt_msg(msg, recipients, key_manager=None):
     return (True, new_msg)
 
 
-def prepare_pgp_lookups(conf):
-    """Ensure, all preconditions are met for looking up PGP keys.
-    """
-    pgphome = pathlib.Path(conf.pgphome).expanduser()
-    if not pgphome.is_dir():
-        print("No such directory: %s" % pgphome)
-        sys.exit(os.EX_USAGE)
-
-
 def contains_encrypted(mime_msg):
     """Detect already encrypted MIME messages.
 

@@ -326,22 +326,6 @@ def test_encrypt_msg_no_pgp_env(tmpdir, tpath):
         msg, ["bob@sample.org"], None)
 
 
-def test_prepare_pgp_lookups(home_dir, tpath):
-    # we can check preconditions for key lookups
-    pgphome = home_dir / "somedir"
-    conf = Namespace(pgphome=str(pgphome))
-    with pytest.raises(SystemExit):
-        pgp.prepare_pgp_lookups(conf)
-
-
-def test_prepare_pgp_lookups_ok(home_dir, tpath):
-    # we can check preconditions for key lookups
-    pgphome = home_dir / "somedir"
-    conf = Namespace(pgphome=str(pgphome))
-    pgphome.mkdir()
-    assert pgp.prepare_pgp_lookups(conf) is None
-
-
 def test_contains_encrypted(tpath):
     # we can detect already encrypted messages
     with (tpath / "samples/full-mail01-enc").open("r") as fp:

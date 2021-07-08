@@ -6,7 +6,7 @@ from email import message_from_binary_file
 from email.policy import default as default_policy
 from io import BytesIO
 from pgp_milter.config import get_config_dict
-from pgp_milter.pgp import encrypt_msg, prepare_pgp_lookups, KeyManager
+from pgp_milter.pgp import encrypt_msg, KeyManager
 
 
 __version__ = "0.1.dev0"  # set also in setup.py
