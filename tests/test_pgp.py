@@ -4,9 +4,7 @@
 #
 import os
 import pgpy
-import pytest
 import re
-from argparse import Namespace
 from email.mime.text import MIMEText
 from email.message import Message
 from email.parser import Parser, BytesParser
