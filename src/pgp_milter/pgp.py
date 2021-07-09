@@ -4,10 +4,8 @@
 #
 import email.mime.text
 import os
-import pathlib
 import pgpy
 import re
-import sys
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.parser import Parser
