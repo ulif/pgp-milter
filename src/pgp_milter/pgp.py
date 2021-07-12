@@ -180,22 +180,24 @@ def prepend_header_fields(msg, headers):
     return msg
 
 
-def encrypt_msg(msg, recipients, key_manager=None):
+def encrypt_msg(mime_msg, recipients, key_manager=None):
     """Encrypt `msg` for `recipients` with keys provided by `key_manager`.
 
     Returns, whether changes happened andi the  (possibly changed) message.
 
     If we cannot get keys for all recipients, the messag stays unchained.
     Otherwise the message is encrypted with the keys of each recipient.
+
+    Returns a tuple (`changed`, `mime_msg`) where `changed` indicates if the
+    message was changed.
     """
-    changed = False
     if key_manager is None:
-        return changed, msg
+        return False, mime_msg
     keys = key_manager.get_recipients_keys(recipients)
     if None in keys.values():
-        return False, msg
-    new_msg = pgp_mime_encrypt(msg, list(keys.values()))
-    return (True, new_msg)
+        return False, mime_msg
+    new_mime_msg = pgp_mime_encrypt(mime_msg, list(keys.values()))
+    return (True, new_mime_msg)
 
 
 def contains_encrypted(mime_msg):
