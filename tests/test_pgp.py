@@ -317,11 +317,12 @@ def test_encrypt_msg_multi_rcpts(tmpdir, tpath):
 
 
 def test_encrypt_msg_no_pgp_env(tmpdir, tpath):
-    # without a gpg environment, we cannot encrypt
+    # without a key manager, we cannot encrypt
     with (tpath / "samples/full-mail02").open("r") as fp:
         msg = Parser(policy=default_policy).parse(fp)
     changed, new_msg = pgp.encrypt_msg(
         msg, ["bob@sample.org"], None)
+    assert changed is False
 
 
 def test_contains_encrypted(tpath):
