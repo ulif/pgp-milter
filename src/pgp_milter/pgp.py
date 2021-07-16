@@ -200,7 +200,7 @@ def encrypt_msg(mime_msg, recipients, key_manager=None):
     return (True, new_mime_msg)
 
 
-def contains_encrypted(mime_msg):
+def msg_encrypted(mime_msg):
     """Detect already encrypted MIME messages.
 
     A message is MIME-OpenPGP-encrypted according to RFC 2015 if it is
@@ -213,6 +213,6 @@ def contains_encrypted(mime_msg):
             "multipart/encrypted", "application/pgp-encrypted"]:
         return True
     for part in mime_msg.iter_parts():
-        if contains_encrypted(part):
+        if msg_encrypted(part):
             return True
     return False
