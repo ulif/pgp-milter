@@ -305,6 +305,20 @@ class TestPGPMilter(object):
         assert "Ümlaut" in content.decode('utf-8')
         milter.logfp.close()
 
+    def test_eom_leaves_encrypted_untouched(self, home_dir, tpath):
+        # we do not reencrypt already encrypted messages
+        key = tpath.joinpath("alice3.pub").read_text()
+        milter = PGPTestMilter()
+        home_dir.join(".pgphome", "OpenPGP_0x00000000000000A3.asc").write(key)
+        milter.key_mgr = KeyManager(path=str(home_dir / ".pgphome"))
+        assert milter.connect() == Milter.CONTINUE
+        with (tpath / "samples" / "full-mail01-enc").open("rb") as fp:
+            rc = milter.feedFile(fp, rcpt="alice@sample.net")
+            assert rc == Milter.ACCEPT
+        assert "X-PGPMilter" in milter._msg.keys()
+        assert milter._bodyreplaced is False
+        milter.logfp.close()
+
     def test_update_headers(self, home_dir, tpath):
         # we can update complete sets of headers
         milter = PGPTestMilter()
