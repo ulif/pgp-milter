@@ -2,6 +2,7 @@
 #
 # tests for the `pgp` module.
 #
+import io
 import os
 import pgpy
 import re
@@ -228,6 +229,15 @@ def test_pgp_mime_encrypt(tmpdir, tpath):
         (tpath / "samples/mime-enc-body").read_text()
     )
     assert replace_pgp_msg(result.as_string()) == expected
+
+
+def mime_structure(msg):
+    '''msg should be an email.message.Message object'''
+    with io.StringIO() as fp:
+        render_mime_structure(msg, stream=fp)
+        fp.seek(0)
+        return fp.read()
+
 
 
 def test_pgp_mime_encrypt_fullmail(tmpdir, tpath):
