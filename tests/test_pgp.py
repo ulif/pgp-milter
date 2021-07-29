@@ -252,6 +252,10 @@ def test_pgp_mime_encrypt_fullmail(tmpdir, tpath):
         "Content-Disposition"]
     assert "multipart/encrypted" in result.as_string()
     assert "BEGIN PGP MESSAGE" in result.as_string()
+    assert mime_structure(result) == (
+            '└┬multipart/encrypted inline 1690 bytes  (Subject: Subject)\n'
+            ' ├─application/pgp-encrypted 102 bytes \n'
+            ' └─application/octet-stream [encrypted.asc] 895 bytes \n')
 
 
 def test_get_encryptable_payload(tpath):
