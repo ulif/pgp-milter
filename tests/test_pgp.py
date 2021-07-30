@@ -7,7 +7,6 @@ import os
 import pgpy
 import re
 import sys
-from email.iterators import _structure
 from email.mime.text import MIMEText
 from email.message import Message
 from email.parser import Parser, BytesParser
