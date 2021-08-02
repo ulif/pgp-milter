@@ -51,7 +51,7 @@ def render_mime_structure(z, prefix='└', stream=sys.stdout):
     disp = z.get_params(None, header='Content-Disposition')
     disposition = '' if disp is None else ''.join(
             [' ' + x[0] for x in disp if x[0] in ['attachment', 'inline']])
-    subject = '' if not 'subject' in z else ' (Subject: %s)' % z['subject']
+    subject = '' if 'subject' not in z else ' (Subject: %s)' % z['subject']
 
     if (z.is_multipart()):
         print("%s┬%s%s%s%s %s bytes %s" % (
@@ -236,7 +236,6 @@ def mime_structure(msg):
         render_mime_structure(msg, stream=fp)
         fp.seek(0)
         return fp.read()
-
 
 
 def test_pgp_mime_encrypt_fullmail(tmpdir, tpath):
