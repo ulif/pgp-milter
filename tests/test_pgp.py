@@ -45,7 +45,7 @@ def replace_pgp_msg(text):
 # adapted from notmuch:devel/printmimestructure
 # adapted from autocrypt:memoryhole/generators/render_mime_structure
 def render_mime_structure(z, prefix='└', stream=sys.stdout):
-    '''z should be an email.message.Message object'''
+    # z should be an email.message.Message object
     fname = '' if z.get_filename() is None else ' [' + z.get_filename() + ']'
     cset = '' if z.get_charset() is None else ' (' + z.get_charset() + ')'
     disp = z.get_params(None, header='Content-Disposition')
@@ -69,6 +69,14 @@ def render_mime_structure(z, prefix='└', stream=sys.stdout):
         print("%s─%s%s%s%s %s bytes %s" % (
             prefix, z.get_content_type(), cset, disposition, fname,
             str(len(z.as_string())), subject), file=stream)
+
+
+def mime_structure(msg):
+    # msg should be an email.message.Message object
+    with io.StringIO() as fp:
+        render_mime_structure(msg, stream=fp)
+        fp.seek(0)
+        return fp.read()
 
 
 class TestMemoryKeyStore(object):
@@ -228,14 +236,6 @@ def test_pgp_mime_encrypt(tmpdir, tpath):
         (tpath / "samples/mime-enc-body").read_text()
     )
     assert replace_pgp_msg(result.as_string()) == expected
-
-
-def mime_structure(msg):
-    '''msg should be an email.message.Message object'''
-    with io.StringIO() as fp:
-        render_mime_structure(msg, stream=fp)
-        fp.seek(0)
-        return fp.read()
 
 
 def test_pgp_mime_encrypt_fullmail(tmpdir, tpath):
