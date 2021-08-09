@@ -153,6 +153,9 @@ def get_encryptable_payload(msg):
 
     I.e. the part that should be encrypted when outward bound. Expects and
     returns an `email.message.EmailMessage` object.
+
+    We simply remove all headers except "Content-", thus keeping a well-formed
+    MIME-container (if the message was in MIME-format) or a raw inline message.
     """
     for k in msg.keys():  # remove headers not "encrypted".
         if k.lower().startswith("content-"):
