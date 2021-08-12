@@ -226,6 +226,30 @@ def test_parse_raw(tpath):
     assert isinstance(parsed, Message)
 
 
+def test_memory_hole(tpath):
+    with (tpath / "samples" / "full-mail05").open() as fp:
+        msg = Parser(policy=default_policy).parse(fp)
+    part = Parser().parsestr(msg.get_payload())
+    msg, new_part = pgp.memory_hole(msg, part)
+    new_part.set_boundary("---BOUNDARY---")
+    assert new_part.as_string() == (
+        'Content-Type: multipart/mixed; boundary="---BOUNDARY---"\n'
+        '\n'
+        '-----BOUNDARY---\n'
+        'Content-Type: text/rfc822-headers; charset="us-ascii"\n'
+        'Content-Transfer-Encoding: 7bit\n'
+        '\n'
+        'Subject: Saying Hello\n'
+        '\n'
+        '-----BOUNDARY---\n'
+        '\n'
+        'This is a message just to say hello.\n'
+        'So, "Hello".\n'
+        '\n'
+        '-----BOUNDARY-----\n'
+        )
+    assert msg["Subject"] == "..."
+
 def test_pgp_mime_encrypt(tmpdir, tpath):
     # we can create PGP-MIME messages from MIME
     key, _ = pgpy.PGPKey.from_file(str(tpath / "alice.pub"))

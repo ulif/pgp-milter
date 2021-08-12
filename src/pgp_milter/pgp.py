@@ -8,6 +8,7 @@ import pgpy
 import re
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from email.parser import Parser
 from email.policy import default as default_policy
 from email.utils import parseaddr
@@ -117,7 +118,26 @@ def parse_raw(headers, body):
     return Parser(policy=default_policy).parsestr(raw_msg)
 
 
-def pgp_mime_encrypt(mime_msg, keys):
+def memory_hole(msg, part, replaced_headers={'subject': '...'}):
+    """Apply memory hole to obscure headers.
+    """
+    headers = ""
+    for header, value in msg.items():
+        h = header.lower()
+        if (h == 'subject'):
+            headers += "%s: %s\n" % (header, value)
+    headers_part = MIMEText(headers, "rfc822-headers")
+    del headers_part["MIME-Version"]
+    new_part = MIMEMultipart('mixed', _subparts=[headers_part, part])
+    del new_part["MIME-Version"]
+    for header, value in replaced_headers.items():
+        if header in msg:
+            del(msg[header])
+            msg.add_header(header, value)
+    return msg, new_part
+
+
+def pgp_mime_encrypt(mime_msg, keys, protected_headers=['subject', ]):
     """Create PGP encrypted message from ordinary MIME message
 
     The returned multipart MIME container should conform to RFC 3156.
