@@ -6,6 +6,7 @@ import email.mime.text
 import os
 import pgpy
 import re
+from collections import namedtuple
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -17,6 +18,19 @@ from email.utils import parseaddr
 # The format of keyfile names - OpenPGP_0x<16 uppercase hex digits>.asc
 # Sample: OpenPGP_0x0123456789ABCDEF.asc
 RE_KEYFILENAME = re.compile(r"^OpenPGP_0x[0-9A-F]{16}\.asc$")
+
+
+Replace = namedtuple("Replace", ("forced_display", "replacement"))
+
+
+REPLACED_HEADERS = {
+        "subject": Replace(True, "..."),
+        "message-id": Replace(True, "C@memoryhole.example"),
+        "date": Replace(True, "Thu, 1 Jan 1970 00:00:00 +0000"),
+        "in-reply-to": Replace(False, None),
+        "references": Replace(False, None),
+        "user-agent": Replace(False, None),
+    }
 
 
 class MemoryKeyStore(object):
@@ -118,13 +132,13 @@ def parse_raw(headers, body):
     return Parser(policy=default_policy).parsestr(raw_msg)
 
 
-def memory_hole(msg, part, replaced_headers={'subject': '...'}):
+def memory_hole(msg, part, replaced_headers=REPLACED_HEADERS):
     """Apply memory hole to obscure headers.
     """
     headers = ""
     for header, value in msg.items():
         h = header.lower()
-        if (h == 'subject'):
+        if h in replaced_headers and replaced_headers[h].forced_display:
             headers += "%s: %s\n" % (header, value)
     headers_part = MIMEText(headers, "rfc822-headers")
     del headers_part["MIME-Version"]
@@ -133,7 +147,8 @@ def memory_hole(msg, part, replaced_headers={'subject': '...'}):
     for header, value in replaced_headers.items():
         if header in msg:
             del(msg[header])
-            msg.add_header(header, value)
+            if value.replacement is not None:
+                msg.add_header(header, value.replacement)
     return msg, new_part
 
 
