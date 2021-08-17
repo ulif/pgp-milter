@@ -240,6 +240,8 @@ def test_memory_hole(tpath):
         'Content-Transfer-Encoding: 7bit\n'
         '\n'
         'Subject: Saying Hello\n'
+        'Date: Fri, 21 Nov 1997 09:55:06 -0600\n'
+        'Message-ID: <1234@local.machine.example>\n'
         '\n'
         '-----BOUNDARY---\n'
         '\n'
