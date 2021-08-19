@@ -252,6 +252,7 @@ def test_memory_hole(tpath):
         )
     assert msg["Subject"] == "..."
 
+
 def test_pgp_mime_encrypt(tmpdir, tpath):
     # we can create PGP-MIME messages from MIME
     key, _ = pgpy.PGPKey.from_file(str(tpath / "alice.pub"))
