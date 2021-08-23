@@ -7,6 +7,7 @@ import os
 import pgpy
 import re
 import sys
+from copy import deepcopy
 from email.mime.text import MIMEText
 from email.message import Message
 from email.parser import Parser, BytesParser
@@ -229,7 +230,7 @@ def test_parse_raw(tpath):
 def test_memory_hole(tpath):
     with (tpath / "samples" / "full-mail05").open() as fp:
         msg = Parser(policy=default_policy).parse(fp)
-    part = Parser().parsestr(msg.get_payload())
+    part = pgp.get_encryptable_payload(deepcopy(msg))
     msg, new_part = pgp.memory_hole(msg, part)
     new_part.set_boundary("---BOUNDARY---")
     assert new_part.as_string() == (
