@@ -134,6 +134,12 @@ def parse_raw(headers, body):
 
 def memory_hole(msg, part, replaced_headers=REPLACED_HEADERS):
     """Apply memory hole to obscure headers.
+
+    `part` is expected to be the root part of the MIME message `msg`. This part
+    is considered one of the new subparts of a fresh multipart/mixed part that
+    can become the new root.
+
+    See https://modernpgp.org/memoryhole/ and George Orwells "1984" for details.
     """
     headers = ""
     for header, value in msg.items():
