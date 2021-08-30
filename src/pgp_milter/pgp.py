@@ -139,6 +139,9 @@ def memory_hole(msg, part, replaced_headers=REPLACED_HEADERS):
     is considered one of the new subparts of a fresh multipart/mixed part that
     can become the new root.
 
+    Returns new MIME message with headers applied and a new part containing the
+    old headers and the old root part of the message.
+
     See https://modernpgp.org/memoryhole/ and George Orwells "1984" for details.
     """
     headers = ""
