@@ -7,6 +7,7 @@ import os
 import pgpy
 import re
 from collections import namedtuple
+from copy import deepcopy
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -144,6 +145,7 @@ def memory_hole(msg, part, replaced_headers=REPLACED_HEADERS):
 
     See https://modernpgp.org/memoryhole/ and George Orwells "1984" for details.
     """
+    msg = deepcopy(msg)
     headers = ""
     for header, value in msg.items():
         h = header.lower()
