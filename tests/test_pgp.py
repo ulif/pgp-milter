@@ -227,6 +227,29 @@ def test_parse_raw(tpath):
     assert isinstance(parsed, Message)
 
 
+class TestProtectedHeaders(object):
+
+    headerfields = dict([
+        ("From", "alice@sample.org"), ("To", "bob@sample.org"),
+        ("Subject", "Contract with FooCorp"),
+        ("Date", "Mon, 29 Jan 2001 18:08:39 -0500"),
+        ("Message-Id", "real-msgid"), ("References", "ref-id-01"),
+        ("In-Reply-To", "other-msgid"), ("X-Mailer", "foo"),
+        ("User-Agent", "Funky Mailer")
+    ])
+
+    def test_default(self):
+        # Default values are applied, other headers are kept unchanged
+        part = MIMEText("Some Test")
+        msg = deepcopy(part)
+        for key, val in self.headerfields.items():
+            msg[key] = val
+        new_msg, new_part = pgp.memory_hole(msg, part)
+        assert new_msg["From"] == msg["From"]       # unchanged
+        assert new_msg["Subject"] != msg["..."]     # changed
+        assert "In-Reply-To" not in new_msg.keys()  # removed
+
+
 def test_memory_hole(tpath):
     with (tpath / "samples" / "full-mail05").open() as fp:
         msg = Parser(policy=default_policy).parse(fp)
