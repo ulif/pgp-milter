@@ -24,6 +24,9 @@ RE_KEYFILENAME = re.compile(r"^OpenPGP_0x[0-9A-F]{16}\.asc$")
 Replace = namedtuple("Replace", ("forced_display", "replacement"))
 
 
+# Header fields to be changed/obscured - fields can be changed in message
+# header (`forced_display`=True) or be removed (`forced_display`=False) or be
+# kept untouched (not mentioned in this dict).
 REPLACED_HEADERS = {
         "subject": Replace(True, "..."),
         "message-id": Replace(True, "C@memoryhole.example"),
