@@ -48,7 +48,7 @@ def replace_pgp_msg(text):
 def render_mime_structure(z, prefix='└', stream=sys.stdout):
     # z should be an email.message.Message object
     fname = '' if z.get_filename() is None else ' [' + z.get_filename() + ']'
-    cset = '' if z.get_charset() is None else ' (' + z.get_charset() + ')'
+    cset = '' if z.get_charset() is None else ' (' + str(z.get_charset()) + ')'
     disp = z.get_params(None, header='Content-Disposition')
     disposition = '' if disp is None else ''.join(
             [' ' + x[0] for x in disp if x[0] in ['attachment', 'inline']])
@@ -248,6 +248,29 @@ class TestProtectedHeaders(object):
         assert new_msg["From"] == msg["From"]       # unchanged
         assert new_msg["Subject"] != msg["..."]     # changed
         assert "In-Reply-To" not in new_msg.keys()  # removed
+        assert mime_structure(new_part) == (
+                '└┬multipart/mixed 485 bytes \n'
+                ' ├─text/rfc822-headers (us-ascii) 179 bytes \n'
+                ' └─text/plain (us-ascii) 105 bytes \n'
+                )
+
+
+    def test_empty(self):
+        # No header changes happen when the replacement table is empty
+        # (although we create an rfc822-headers part)
+        part = MIMEText("Some Test")
+        msg = deepcopy(part)
+        for key, val in self.headerfields.items():
+            msg[key] = val
+        replaced_headers = dict()
+        new_msg, new_part = pgp.memory_hole(
+                msg, part, replaced_headers=replaced_headers)
+        assert sorted(new_msg.items()) == sorted(msg.items())
+        assert mime_structure(new_part) == (
+                '└┬multipart/mixed 485 bytes \n'
+                ' ├─text/rfc822-headers (us-ascii) 179 bytes \n'
+                ' └─text/plain (us-ascii) 105 bytes \n'
+                )
 
 
 def test_memory_hole(tpath):
