@@ -228,6 +228,7 @@ def test_parse_raw(tpath):
 
 
 class TestProtectedHeaders(object):
+    # Test memory hole functionality
 
     headerfields = dict([
         ("From", "alice@sample.org"), ("To", "bob@sample.org"),
