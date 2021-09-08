@@ -274,61 +274,61 @@ class TestProtectedHeaders(object):
                 )
 
 
-def test_memory_hole(tpath):
-    with (tpath / "samples" / "full-mail05").open() as fp:
-        msg = Parser(policy=default_policy).parse(fp)
-    part = pgp.get_encryptable_payload(deepcopy(msg))
-    msg, new_part = pgp.memory_hole(msg, part)
-    new_part.set_boundary("---BOUNDARY---")
-    assert new_part.as_string() == (
-        'Content-Type: multipart/mixed; boundary="---BOUNDARY---"\n'
-        '\n'
-        '-----BOUNDARY---\n'
-        'Content-Type: text/rfc822-headers; charset="us-ascii"\n'
-        'Content-Transfer-Encoding: 7bit\n'
-        '\n'
-        'Subject: Saying Hello\n'
-        'Date: Fri, 21 Nov 1997 09:55:06 -0600\n'
-        'Message-ID: <1234@local.machine.example>\n'
-        '\n'
-        '-----BOUNDARY---\n'
-        '\n'
-        'This is a message just to say hello.\n'
-        'So, "Hello".\n'
-        '\n'
-        '-----BOUNDARY-----\n'
-        )
-    assert msg["Subject"] == "..."
+    def test_memory_hole(self, tpath):
+        with (tpath / "samples" / "full-mail05").open() as fp:
+            msg = Parser(policy=default_policy).parse(fp)
+        part = pgp.get_encryptable_payload(deepcopy(msg))
+        msg, new_part = pgp.memory_hole(msg, part)
+        new_part.set_boundary("---BOUNDARY---")
+        assert new_part.as_string() == (
+            'Content-Type: multipart/mixed; boundary="---BOUNDARY---"\n'
+            '\n'
+            '-----BOUNDARY---\n'
+            'Content-Type: text/rfc822-headers; charset="us-ascii"\n'
+            'Content-Transfer-Encoding: 7bit\n'
+            '\n'
+            'Subject: Saying Hello\n'
+            'Date: Fri, 21 Nov 1997 09:55:06 -0600\n'
+            'Message-ID: <1234@local.machine.example>\n'
+            '\n'
+            '-----BOUNDARY---\n'
+            '\n'
+            'This is a message just to say hello.\n'
+            'So, "Hello".\n'
+            '\n'
+            '-----BOUNDARY-----\n'
+            )
+        assert msg["Subject"] == "..."
 
 
-def test_memory_hole_w_mime_msg(tpath):
-    # we can header-protect a mime msg
-    with (tpath / "samples" / "full-mail02").open() as fp:
-        msg = Parser(policy=default_policy).parse(fp)
-    part = pgp.get_encryptable_payload(deepcopy(msg))
-    msg, new_part = pgp.memory_hole(msg, part)
-    new_part.set_boundary("---BOUNDARY---")
-    assert new_part.as_string() == (
-        'Content-Type: multipart/mixed; boundary="---BOUNDARY---"\n'
-        '\n'
-        '-----BOUNDARY---\n'
-        'Content-Type: text/rfc822-headers; charset="us-ascii"\n'
-        'Content-Transfer-Encoding: 7bit\n'
-        '\n'
-        'Date: Tue, 30 Apr 2019 21:21:28 +0200\n'
-        'Subject: Subject\n'
-        'Message-ID: <20190430211128.h24b7qbx7evr4sdz@tigger>\n'
-        '\n'
-        '-----BOUNDARY---\n'
-        'Content-Type: text/plain; charset=us-ascii\n'
-        'Content-Disposition: inline\n'
-        '\n'
-        'foo bar baz\n'
-        '\n'
-        '\n'
-        '-----BOUNDARY-----\n'
-        )
-    assert msg["Subject"] == "..."
+    def test_memory_hole_w_mime_msg(self, tpath):
+        # we can header-protect a mime msg
+        with (tpath / "samples" / "full-mail02").open() as fp:
+            msg = Parser(policy=default_policy).parse(fp)
+        part = pgp.get_encryptable_payload(deepcopy(msg))
+        msg, new_part = pgp.memory_hole(msg, part)
+        new_part.set_boundary("---BOUNDARY---")
+        assert new_part.as_string() == (
+            'Content-Type: multipart/mixed; boundary="---BOUNDARY---"\n'
+            '\n'
+            '-----BOUNDARY---\n'
+            'Content-Type: text/rfc822-headers; charset="us-ascii"\n'
+            'Content-Transfer-Encoding: 7bit\n'
+            '\n'
+            'Date: Tue, 30 Apr 2019 21:21:28 +0200\n'
+            'Subject: Subject\n'
+            'Message-ID: <20190430211128.h24b7qbx7evr4sdz@tigger>\n'
+            '\n'
+            '-----BOUNDARY---\n'
+            'Content-Type: text/plain; charset=us-ascii\n'
+            'Content-Disposition: inline\n'
+            '\n'
+            'foo bar baz\n'
+            '\n'
+            '\n'
+            '-----BOUNDARY-----\n'
+            )
+        assert msg["Subject"] == "..."
 
 def test_pgp_mime_encrypt(tmpdir, tpath):
     # we can create PGP-MIME messages from MIME
