@@ -268,8 +268,8 @@ class TestProtectedHeaders(object):
                 msg, part, replaced_headers=replaced_headers)
         assert sorted(new_msg.items()) == sorted(msg.items())
         assert mime_structure(new_part) == (
-                '└┬multipart/mixed 485 bytes \n'
-                ' ├─text/rfc822-headers (us-ascii) 179 bytes \n'
+                '└┬multipart/mixed 393 bytes \n'
+                ' ├─text/rfc822-headers (us-ascii) 87 bytes \n'
                 ' └─text/plain (us-ascii) 105 bytes \n'
                 )
 
