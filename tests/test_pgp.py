@@ -8,6 +8,7 @@ import pgpy
 import re
 import sys
 from copy import deepcopy
+from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.message import Message
 from email.parser import Parser, BytesParser
@@ -273,6 +274,23 @@ class TestProtectedHeaders(object):
                 ' └─text/plain (us-ascii) 105 bytes \n'
                 )
 
+
+    def test_nested(self):
+        # we cope with nested structures
+        part = MIMEMultipart("alternative")
+        part.attach(MIMEText("Some ASCII text"))
+        part.attach(MIMEText("Some utf-8 text: äöü"))
+        msg = deepcopy(part)
+        for key, val in self.headerfields.items():
+            msg[key] = val
+        new_msg, new_part = pgp.memory_hole(msg, part)
+        assert mime_structure(new_part) == (
+                '└┬multipart/mixed 844 bytes \n'
+                ' ├─text/rfc822-headers (us-ascii) 179 bytes \n'
+                ' └┬multipart/alternative 464 bytes \n'
+                '  ├─text/plain (us-ascii) 111 bytes \n'
+                '  └─text/plain (utf-8) 128 bytes \n'
+                )
 
     def test_memory_hole(self, tpath):
         with (tpath / "samples" / "full-mail05").open() as fp:
