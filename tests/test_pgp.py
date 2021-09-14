@@ -7,6 +7,7 @@ import os
 import pgpy
 import re
 import sys
+from conftest import mime_structure
 from copy import deepcopy
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -42,43 +43,6 @@ def replace_pgp_msg(text):
         text,
         flags=re.M + re.S,
     )
-
-
-# adapted from notmuch:devel/printmimestructure
-# adapted from autocrypt:memoryhole/generators/render_mime_structure
-def render_mime_structure(z, prefix='└', stream=sys.stdout):
-    # z should be an email.message.Message object
-    fname = '' if z.get_filename() is None else ' [' + z.get_filename() + ']'
-    cset = '' if z.get_charset() is None else ' (' + str(z.get_charset()) + ')'
-    disp = z.get_params(None, header='Content-Disposition')
-    disposition = '' if disp is None else ''.join(
-            [' ' + x[0] for x in disp if x[0] in ['attachment', 'inline']])
-    subject = '' if 'subject' not in z else ' (Subject: %s)' % z['subject']
-
-    if (z.is_multipart()):
-        print("%s┬%s%s%s%s %s bytes %s" % (
-            prefix, z.get_content_type(), cset, disposition, fname,
-            str(len(z.as_string())), subject), file=stream)
-        if prefix.endswith('└'):
-            prefix = prefix[:-1] + ' '
-        if prefix.endswith('├'):
-            prefix = prefix[:-1] + '│'
-        parts = z.get_payload()
-        for i, part in enumerate(parts):
-            prefix_ext = '├' if i < len(parts) - 1 else '└'
-            render_mime_structure(part, prefix + prefix_ext, stream=stream)
-    else:
-        print("%s─%s%s%s%s %s bytes %s" % (
-            prefix, z.get_content_type(), cset, disposition, fname,
-            str(len(z.as_string())), subject), file=stream)
-
-
-def mime_structure(msg):
-    # msg should be an email.message.Message object
-    with io.StringIO() as fp:
-        render_mime_structure(msg, stream=fp)
-        fp.seek(0)
-        return fp.read()
 
 
 class TestMemoryKeyStore(object):
