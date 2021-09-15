@@ -2,11 +2,9 @@
 #
 # tests for the `pgp` module.
 #
-import io
 import os
 import pgpy
 import re
-import sys
 from conftest import mime_structure
 from copy import deepcopy
 from email.mime.multipart import MIMEMultipart
@@ -220,7 +218,6 @@ class TestProtectedHeaders(object):
                 ' └─text/plain (us-ascii) 105 bytes \n'
                 )
 
-
     def test_empty(self):
         # No header changes happen when the replacement table is empty
         # (although we create an rfc822-headers part)
@@ -237,7 +234,6 @@ class TestProtectedHeaders(object):
                 ' ├─text/rfc822-headers (us-ascii) 87 bytes \n'
                 ' └─text/plain (us-ascii) 105 bytes \n'
                 )
-
 
     def test_nested(self):
         # we cope with nested structures
@@ -282,7 +278,6 @@ class TestProtectedHeaders(object):
             )
         assert msg["Subject"] == "..."
 
-
     def test_memory_hole_w_mime_msg(self, tpath):
         # we can header-protect a mime msg
         with (tpath / "samples" / "full-mail02").open() as fp:
@@ -311,6 +306,7 @@ class TestProtectedHeaders(object):
             '-----BOUNDARY-----\n'
             )
         assert msg["Subject"] == "..."
+
 
 def test_pgp_mime_encrypt(tmpdir, tpath):
     # we can create PGP-MIME messages from MIME
