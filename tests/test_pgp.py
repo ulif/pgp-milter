@@ -347,6 +347,15 @@ def test_get_encryptable_payload(tpath):
     assert result.as_string() == want
 
 
+def test_get_encryptable_payload_works_by_value(tpath):
+    # proof that passed in messages are not changed.
+    with (tpath / "samples/full-mail02").open("r") as fp:
+        msg = Parser(policy=default_policy).parse(fp)
+    headers_before = msg.items()
+    result = pgp.get_encryptable_payload(msg)
+    assert msg.items() == headers_before
+
+
 def test_prepend_headerfields():
     # we can inject headerfields
     msg = Parser(policy=default_policy).parsestr(

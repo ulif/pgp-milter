@@ -206,6 +206,7 @@ def get_encryptable_payload(msg):
     We simply remove all headers except "Content-", thus keeping a well-formed
     MIME-container (if the message was in MIME-format) or a raw inline message.
     """
+    msg = deepcopy(msg)
     for k in msg.keys():  # remove headers not "encrypted".
         if k.lower().startswith("content-"):
             continue
