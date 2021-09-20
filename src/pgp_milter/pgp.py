@@ -166,15 +166,17 @@ def memory_hole(msg, part, replaced_headers=REPLACED_HEADERS):
     return msg, new_part
 
 
-def pgp_mime_encrypt(mime_msg, keys, protected_headers=['subject', ]):
+def pgp_mime_encrypt(mime_msg, keys, replaced_headers=REPLACED_HEADERS):
     """Create PGP encrypted message from ordinary MIME message
 
     The returned multipart MIME container should conform to RFC 3156.
     The message will be encrypted with all keys passed in.
     """
     headers = mime_msg.items()
-    payload = get_encryptable_payload(mime_msg).as_string()
-    enc_msg = pgpy.PGPMessage.new(payload)
+    payload = get_encryptable_payload(mime_msg)
+    mime_msg, protected_payload = memory_hole(
+            mime_msg, payload, replaced_headers)
+    enc_msg = pgpy.PGPMessage.new(protected_payload.as_string())
     for key in keys:
         enc_msg = key.encrypt(enc_msg)
     multipart_container = MIMEMultipart(
