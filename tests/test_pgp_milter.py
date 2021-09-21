@@ -5,6 +5,8 @@ import pytest
 import re
 import Milter.testctx
 from argparse import Namespace
+from conftest import mime_structure
+from email.parser import Parser
 from io import BytesIO
 from Milter.test import TestBase as MilterTestBase
 from pathlib import Path
@@ -282,8 +284,14 @@ class TestPGPMilter(object):
         dec_msg = priv_key.decrypt(
             pgpy.PGPMessage.from_blob(enc_msg))
         assert dec_msg.is_encrypted is False
-        assert dec_msg.message.startswith(
-                'Content-Type: multipart/alternative;')
+        dec_mime_msg = Parser().parsestr(dec_msg.message)
+        assert mime_structure(dec_mime_msg) == (
+            '└┬multipart/mixed 1536 bytes \n'
+            ' ├─text/rfc822-headers 191 bytes \n'
+            ' └┬multipart/alternative 1144 bytes \n'
+            '  ├─text/plain 232 bytes \n'
+            '  └─text/html 703 bytes \n'
+        )
         milter.logfp.close()
 
     def test_eom_leaves_headercontent(self, home_dir, tpath):
