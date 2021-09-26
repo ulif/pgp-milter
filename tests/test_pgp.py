@@ -253,7 +253,7 @@ class TestProtectedHeaders(object):
                 )
 
     def test_memory_hole(self, tpath):
-        with (tpath / "samples" / "full-mail05").open() as fp:
+        with (tpath / "samples" / "full-mail04").open() as fp:
             msg = Parser(policy=default_policy).parse(fp)
         part = pgp.get_encryptable_payload(deepcopy(msg))
         msg, new_part = pgp.memory_hole(msg, part)
