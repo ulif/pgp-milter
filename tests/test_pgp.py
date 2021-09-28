@@ -404,10 +404,9 @@ def test_encrypt_msg(tmpdir, tpath):
     enc_msg = pgpy.PGPMessage.from_blob(enc_msg)
     dec_msg = priv_key.decrypt(enc_msg)
     assert dec_msg.is_encrypted is False
-    assert dec_msg.message == (
+    assert (
         'Content-Type: text/plain; charset=us-ascii\n'
-        'Content-Disposition: inline\n\nfoo bar baz\n\n')
-    assert dec_msg.message == msg.as_string()
+        'Content-Disposition: inline\n\nfoo bar baz\n\n') in dec_msg.message
 
 
 def test_encrypt_msg_no_key(tmpdir, tpath):
