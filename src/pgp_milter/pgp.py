@@ -172,10 +172,10 @@ def pgp_mime_encrypt(mime_msg, keys, replaced_headers=REPLACED_HEADERS):
     The returned multipart MIME container should conform to RFC 3156.
     The message will be encrypted with all keys passed in.
     """
-    headers = mime_msg.items()
     payload = get_encryptable_payload(mime_msg)
     mime_msg, protected_payload = memory_hole(
             mime_msg, payload, replaced_headers)
+    headers = mime_msg.items()
     enc_msg = pgpy.PGPMessage.new(protected_payload.as_string())
     for key in keys:
         enc_msg = key.encrypt(enc_msg)
