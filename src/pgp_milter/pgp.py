@@ -158,11 +158,12 @@ def memory_hole(msg, part, replaced_headers=REPLACED_HEADERS):
     del headers_part["MIME-Version"]
     new_part = MIMEMultipart('mixed', _subparts=[headers_part, part])
     del new_part["MIME-Version"]
-    for header, value in replaced_headers.items():
-        if header in msg:
+    for header in msg.keys():
+        h = header.lower()
+        if h in replaced_headers.keys():
             del(msg[header])
-            if value.replacement is not None:
-                msg.add_header(header, value.replacement)
+            if replaced_headers[h].replacement is not None:
+                msg.add_header(header, replaced_headers[h].replacement)
     return msg, new_part
 
 
