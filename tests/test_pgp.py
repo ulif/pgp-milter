@@ -212,6 +212,17 @@ class TestProtectedHeaders(object):
         assert new_msg["From"] == msg["From"]       # unchanged
         assert new_msg["Subject"] != msg["..."]     # changed
         assert "In-Reply-To" not in new_msg.keys()  # removed
+        assert sorted(new_msg.keys()) == [
+                'Content-Transfer-Encoding',
+                'Content-Type',
+                'Date',
+                'From',
+                'MIME-Version',
+                'Message-Id',
+                'Subject',
+                'To',
+                'X-Mailer',
+                ]
         assert mime_structure(new_part) == (
                 '└┬multipart/mixed 485 bytes \n'
                 ' ├─text/rfc822-headers (us-ascii) 179 bytes \n'
