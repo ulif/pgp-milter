@@ -146,7 +146,8 @@ def memory_hole(msg, part, replaced_headers=REPLACED_HEADERS):
     Returns new MIME message with headers applied and a new part containing the
     old headers and the old root part of the message.
 
-    See https://modernpgp.org/memoryhole/ and George Orwells "1984" for details.
+    See https://modernpgp.org/memoryhole/ and George Orwells "1984" for
+    details.
     """
     msg = deepcopy(msg)
     headers = ""

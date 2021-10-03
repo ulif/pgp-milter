@@ -363,7 +363,7 @@ def test_get_encryptable_payload_works_by_value(tpath):
     with (tpath / "samples/full-mail02").open("r") as fp:
         msg = Parser(policy=default_policy).parse(fp)
     headers_before = msg.items()
-    result = pgp.get_encryptable_payload(msg)
+    pgp.get_encryptable_payload(msg)
     assert msg.items() == headers_before
 
 
