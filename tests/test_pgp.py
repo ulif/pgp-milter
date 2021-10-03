@@ -338,13 +338,13 @@ def test_pgp_mime_encrypt_fullmail(tmpdir, tpath):
         msg = Parser(policy=default_policy).parse(fp)
     result = pgp.pgp_mime_encrypt(msg, [key, ])
     assert result.keys() == [
-        "Return-Path", "Received", "Date", "From", "To", "Subject",
-        "Message-ID", "User-Agent", "Content-Type", "MIME-Version",
+        "Return-Path", "Received", "From", "To", "Date", "Subject",
+        "Message-ID", "Content-Type", "MIME-Version",
         "Content-Disposition"]
     assert "multipart/encrypted" in result.as_string()
     assert "BEGIN PGP MESSAGE" in result.as_string()
     assert mime_structure(result) == (
-            '└┬multipart/encrypted inline 1941 bytes  (Subject: ...)\n'
+            '└┬multipart/encrypted inline 1888 bytes  (Subject: ...)\n'
             ' ├─application/pgp-encrypted 102 bytes \n'
             ' └─application/octet-stream [encrypted.asc] 1146 bytes \n')
 
