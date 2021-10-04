@@ -226,7 +226,7 @@ def prepend_header_fields(msg, headers):
     Header fields from the "Content" family ("Content-Type", ....) are
     discarded before rebuildung message headers.
     """
-    headers = [x for x in headers if not x[0].lower().startswith("content")]
+    headers = [x for x in headers if not x[0].lower().startswith("content-")]
     final_headers = headers + msg.items()
     for k, v in final_headers:
         if k in msg.keys():
