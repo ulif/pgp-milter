@@ -29,7 +29,7 @@ setup(
     url="https://github.com/ulif/pgp-milter",
     author="ulif",
     author_email="uli@gnufix.de",
-    license="GPL3",
+    license="GPL-3.0-or-later AND CC-BY-SA-4.0",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Environment :: Console",
