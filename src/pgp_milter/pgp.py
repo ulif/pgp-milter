@@ -42,8 +42,10 @@ class MemoryKeyStore(object):
 
     The basic `KeyStore` stores keys in memory.
     """
-    def __init__(self):
-        self._ring = pgpy.PGPKeyring()
+    def __init__(self, keyring=None):
+        self._ring = keyring
+        if keyring is None:
+            self._ring = pgpy.PGPKeyring()
 
     def get_recipients_keys(self, recipients):
         """Get keys for email addresses in `recipients`
