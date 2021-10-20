@@ -6,6 +6,7 @@ import email.mime.text
 import os
 import pgpy
 import re
+import requests
 from collections import namedtuple
 from copy import deepcopy
 from email.mime.application import MIMEApplication
@@ -108,6 +109,29 @@ class DirectoryKeyStore(MemoryKeyStore):
                 self._ring.load(os.path.abspath(path))
             except (ValueError, pgpy.errors.PGPError):
                 pass
+
+
+class HKPLookup(object):
+    """Client to lookup HKP keyservers."""
+    def __init__(self, host, port=None, tls=True):
+        port = ":%s" % port if port else ""
+        proto = "https" if tls else "http"
+        self.url = "%s://%s%s/pks/lookup?op={op}&options=mr&search={search}" % (
+                proto, host, port)
+
+    def get(self, key_repr):
+        # api_call = self.url.format(op="index", search=key_repr)
+        api_call = self.url.format(op="get", search=key_repr)
+        resp = requests.get(api_call)
+        if resp.status_code != 200:
+            return None
+        kr = pgpy.PGPKeyring()
+        kr.load(resp.text)
+        if len(kr) > 1 and "@" in key_repr:
+            keys_dict = MemoryKeyStore(kr).get_recipients_keys(key_repr)
+            return keys_dict.get(key_repr)
+        # return first pubkey in ring
+        return kr._keys.get(kr._pubkeys[0])
 
 
 class KeyManager(object):
