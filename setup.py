@@ -9,11 +9,13 @@ def read(fname):
 install_requires = [
     "pymilter",
     "PGPy",
+    "requests",
 ]
 
 tests_require = [
     "coverage[toml]>=5.0.2",
     "pytest>=4.3.0",
+    "requests-mock",
 ]
 
 
