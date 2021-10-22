@@ -1,0 +1,10 @@
+HTTP/1.1 200 OK
+Date: Sun, 14 Nov 2021 03:05:06 GMT
+Server: Hockeypuck/~unreleased
+Content-Type: text/plain
+Content-Length: 100
+Vary: Accept-Encoding
+
+info:1:1
+pub:4271F64CB3B9BC51:1:2048:1401596206::
+uid:Edward Snowden <snowden@nsa.gov>:1401596206::

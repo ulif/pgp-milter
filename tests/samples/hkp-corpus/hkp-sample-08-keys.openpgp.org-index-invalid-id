@@ -1,0 +1,10 @@
+HTTP/2 400 
+server: nginx/1.14.2
+date: Sun, 14 Nov 2021 03:05:06 GMT
+content-type: text/html
+content-length: 96
+access-control-allow-origin: *
+cache-control: no-cache
+
+<p><strong>Error 400</strong> Invalid request</p>
+<p>See https://keys.openpgp.org/about/api</p>
