@@ -1,5 +1,6 @@
 import copy
 import io
+import json
 import os
 import pathlib
 import pytest
@@ -8,6 +9,8 @@ from pgp_milter import PGPMilter
 
 
 PATH_OF_TESTS = pathlib.Path(__file__).parent
+HKP_PATH = PATH_OF_TESTS / "samples" / "hkp-corpus" / "hkp-samples.json"
+hkp_requests = json.loads(HKP_PATH.read_text())
 
 
 # adapted from notmuch:devel/printmimestructure
@@ -81,3 +84,15 @@ def reset_pgpmilter_class_vars(request, monkeypatch):
         monkeypatch.setattr("pgp_milter.PGPMilter.config", std_config)
         monkeypatch.setattr("pgp_milter.PGPMilter.key_mgr", std_keymgr)
     request.addfinalizer(teardown)
+
+
+@pytest.fixture(scope="function", autouse=False)
+def fake_hkp_server(request, requests_mock):
+    for call in hkp_requests:
+        requests_mock.get(
+                call["call"],
+                status_code=call["status_code"],
+                reason=call["reason"],
+                headers=call["headers"],
+                text=call["body"])
+    return requests_mock
