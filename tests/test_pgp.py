@@ -157,6 +157,26 @@ class TestKeyManager(object):
         assert found["alice@sample.net"].fingerprint == FPR_ALICE
 
 
+class TestHKPLookup(object):
+
+    def test_init(self):
+        # we construct valid URLs on initialization
+        assert pgp.HKPLookup("myhost").url == (
+            "https://myhost/pks/lookup?op={op}&options=mr&search={search}")
+        assert pgp.HKPLookup("myhost", tls=True).url == (
+            "https://myhost/pks/lookup?op={op}&options=mr&search={search}")
+        assert pgp.HKPLookup("myhost", tls=False).url == (
+            "http://myhost/pks/lookup?op={op}&options=mr&search={search}")
+        assert pgp.HKPLookup("myhost", port=42).url == (
+            "https://myhost:42/pks/lookup?op={op}&options=mr&search={search}")
+
+    def test_get(self, fake_hkp_server):
+        # we can get real keys from HKP servers.
+        hkp = pgp.HKPLookup("keys.openpgp.org")
+        key = hkp.get("uli@gnufix.de")
+        assert isinstance(key, pgpy.PGPKey)
+
+
 def test_parse_raw(tpath):
     # we can turn raw messages into Message objects
     headers = [
