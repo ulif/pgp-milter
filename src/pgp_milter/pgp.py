@@ -54,7 +54,7 @@ class MemoryKeyStore(object):
         Looks up the local keys and returns a dict with email-key pairs for
         all emails contained in recipients.
 
-        For emails not found we return `None`.
+        For email-addresses not found in UIDs we return `None`.
 
         For each requested email address we also return the last key created
         only, if there are multiple.
@@ -64,6 +64,8 @@ class MemoryKeyStore(object):
         found = dict([(parseaddr(x)[1], None) for x in recipients])
         for fpr in self._ring.fingerprints("public", "primary"):
             with self._ring.key(fpr) as key:
+                if key.is_expired:
+                    continue
                 for uid in key.userids:
                     addr = parseaddr(uid.email)[1]
                     if addr not in found.keys():
