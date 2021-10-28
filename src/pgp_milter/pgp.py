@@ -118,8 +118,8 @@ class HKPLookup(object):
     def __init__(self, host, port=None, tls=True):
         port = ":%s" % port if port else ""
         proto = "https" if tls else "http"
-        self.url = "%s://%s%s/pks/lookup?op={op}&options=mr&search={search}" % (
-                proto, host, port)
+        hkp_call = "%s://%s%s/pks/lookup?op={op}&options=mr&search={search}"
+        self.url = hkp_call % (proto, host, port)
 
     def get(self, key_repr):
         # api_call = self.url.format(op="index", search=key_repr)
