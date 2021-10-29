@@ -122,7 +122,13 @@ class HKPLookup(object):
         self.url = hkp_call % (proto, host, port)
 
     def get(self, key_repr):
-        # api_call = self.url.format(op="index", search=key_repr)
+        """Get a key from keyserver, represented by `key_repr`.
+
+        `key_repr` might be an email-address, a key id or a fingerprint (as
+        string), optionally preceded by `"0x"`.
+
+        We return at most one key, even if several are available.
+        """
         api_call = self.url.format(op="get", search=key_repr)
         resp = requests.get(api_call)
         if resp.status_code != 200:
