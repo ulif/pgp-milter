@@ -25,9 +25,9 @@ def render_mime_structure(z, prefix='└', stream=sys.stdout):
     subject = '' if 'subject' not in z else ' (Subject: %s)' % z['subject']
 
     if (z.is_multipart()):
-        print("%s┬%s%s%s%s %s bytes %s" % (
-            prefix, z.get_content_type(), cset, disposition, fname,
-            str(len(z.as_string())), subject), file=stream)
+        print("%s┬%s%s%s%s %s" % (
+            prefix, z.get_content_type(), cset, disposition, fname, subject),
+            file=stream)
         if prefix.endswith('└'):
             prefix = prefix[:-1] + ' '
         if prefix.endswith('├'):
@@ -37,9 +37,9 @@ def render_mime_structure(z, prefix='└', stream=sys.stdout):
             prefix_ext = '├' if i < len(parts) - 1 else '└'
             render_mime_structure(part, prefix + prefix_ext, stream=stream)
     else:
-        print("%s─%s%s%s%s %s bytes %s" % (
-            prefix, z.get_content_type(), cset, disposition, fname,
-            str(len(z.as_string())), subject), file=stream)
+        print("%s─%s%s%s%s %s" % (
+            prefix, z.get_content_type(), cset, disposition, fname, subject),
+            file=stream)
 
 
 def mime_structure(msg):

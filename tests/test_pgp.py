@@ -244,9 +244,9 @@ class TestProtectedHeaders(object):
                 'X-Mailer',
                 ]
         assert mime_structure(new_part) == (
-                '└┬multipart/mixed 485 bytes \n'
-                ' ├─text/rfc822-headers (us-ascii) 179 bytes \n'
-                ' └─text/plain (us-ascii) 105 bytes \n'
+                '└┬multipart/mixed \n'
+                ' ├─text/rfc822-headers (us-ascii) \n'
+                ' └─text/plain (us-ascii) \n'
                 )
 
     def test_empty(self):
@@ -261,9 +261,9 @@ class TestProtectedHeaders(object):
                 msg, part, replaced_headers=replaced_headers)
         assert sorted(new_msg.items()) == sorted(msg.items())
         assert mime_structure(new_part) == (
-                '└┬multipart/mixed 393 bytes \n'
-                ' ├─text/rfc822-headers (us-ascii) 87 bytes \n'
-                ' └─text/plain (us-ascii) 105 bytes \n'
+                '└┬multipart/mixed \n'
+                ' ├─text/rfc822-headers (us-ascii) \n'
+                ' └─text/plain (us-ascii) \n'
                 )
 
     def test_nested(self):
@@ -276,11 +276,11 @@ class TestProtectedHeaders(object):
             msg[key] = val
         new_msg, new_part = pgp.memory_hole(msg, part)
         assert mime_structure(new_part) == (
-                '└┬multipart/mixed 844 bytes \n'
-                ' ├─text/rfc822-headers (us-ascii) 179 bytes \n'
-                ' └┬multipart/alternative 464 bytes \n'
-                '  ├─text/plain (us-ascii) 111 bytes \n'
-                '  └─text/plain (utf-8) 128 bytes \n'
+                '└┬multipart/mixed \n'
+                ' ├─text/rfc822-headers (us-ascii) \n'
+                ' └┬multipart/alternative \n'
+                '  ├─text/plain (us-ascii) \n'
+                '  └─text/plain (utf-8) \n'
                 )
 
     def test_memory_hole(self, tpath):
@@ -364,9 +364,9 @@ def test_pgp_mime_encrypt_fullmail(tmpdir, tpath):
     assert "multipart/encrypted" in result.as_string()
     assert "BEGIN PGP MESSAGE" in result.as_string()
     assert mime_structure(result) == (
-            '└┬multipart/encrypted inline 1888 bytes  (Subject: ...)\n'
-            ' ├─application/pgp-encrypted 102 bytes \n'
-            ' └─application/octet-stream [encrypted.asc] 1146 bytes \n')
+            '└┬multipart/encrypted inline  (Subject: ...)\n'
+            ' ├─application/pgp-encrypted \n'
+            ' └─application/octet-stream [encrypted.asc] \n')
 
 
 def test_get_encryptable_payload(tpath):

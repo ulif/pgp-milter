@@ -286,11 +286,11 @@ class TestPGPMilter(object):
         assert dec_msg.is_encrypted is False
         dec_mime_msg = Parser().parsestr(dec_msg.message)
         assert mime_structure(dec_mime_msg) == (
-            '└┬multipart/mixed 1536 bytes \n'
-            ' ├─text/rfc822-headers 191 bytes \n'
-            ' └┬multipart/alternative 1144 bytes \n'
-            '  ├─text/plain 232 bytes \n'
-            '  └─text/html 703 bytes \n'
+            '└┬multipart/mixed \n'
+            ' ├─text/rfc822-headers \n'
+            ' └┬multipart/alternative \n'
+            '  ├─text/plain \n'
+            '  └─text/html \n'
         )
         milter.logfp.close()
 
