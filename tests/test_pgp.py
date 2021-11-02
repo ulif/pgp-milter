@@ -23,7 +23,7 @@ FPR_BOB = "FDBE48E6FE58D021A5C8BE3B982AD46FA8789D5C"
 
 
 # Paths to PGP public keys
-PUBKEY_PATH_ALICE = os.path.join(os.path.dirname(__file__), "alice.pub")
+PUBKEY_PATH_ALICE = os.path.join(os.path.dirname(__file__), "alice1.pub")
 PUBKEY_PATH_ALICE2 = os.path.join(os.path.dirname(__file__), "alice2.pub")
 PUBKEY_PATH_ALICE3 = os.path.join(os.path.dirname(__file__), "alice3.pub")
 
@@ -341,7 +341,7 @@ class TestProtectedHeaders(object):
 
 def test_pgp_mime_encrypt(tmpdir, tpath):
     # we can create PGP-MIME messages from MIME
-    key, _ = pgpy.PGPKey.from_file(str(tpath / "alice.pub"))
+    key, _ = pgpy.PGPKey.from_file(str(tpath / "alice1.pub"))
     mime_msg = MIMEText(_text="meet me at dawn")
     result = pgp.pgp_mime_encrypt(mime_msg, [key, ])
     result.set_boundary("===============1111111111111111111==")
@@ -353,7 +353,7 @@ def test_pgp_mime_encrypt(tmpdir, tpath):
 
 def test_pgp_mime_encrypt_fullmail(tmpdir, tpath):
     # we can encrypt a complete message
-    key, _ = pgpy.PGPKey.from_file(str(tpath / "alice.pub"))
+    key, _ = pgpy.PGPKey.from_file(str(tpath / "alice1.pub"))
     with (tpath / "samples/full-mail02").open() as fp:
         msg = Parser(policy=default_policy).parse(fp)
     result = pgp.pgp_mime_encrypt(msg, [key, ])
@@ -443,7 +443,7 @@ def test_encrypt_msg(tmpdir, tpath):
 def test_encrypt_msg_no_key(tmpdir, tpath):
     # without key, we cannot encrypt
     key_mgr = pgp.KeyManager()
-    key, _ = pgpy.PGPKey.from_file(str(tpath / "alice.pub"))
+    key, _ = pgpy.PGPKey.from_file(str(tpath / "alice1.pub"))
     key_mgr.add_key(key)
     with (tpath / "samples/full-mail02").open("r") as fp:
         msg = Parser(policy=default_policy).parse(fp)
@@ -455,7 +455,7 @@ def test_encrypt_msg_no_key(tmpdir, tpath):
 def test_encrypt_msg_not_all_keys(tmpdir, tpath):
     # we do only encrypt if all keys are available
     key_mgr = pgp.KeyManager()
-    key, _ = pgpy.PGPKey.from_file(str(tpath / "alice.pub"))
+    key, _ = pgpy.PGPKey.from_file(str(tpath / "alice1.pub"))
     key_mgr.add_key(key)
     with (tpath / "samples/full-mail02").open("r") as fp:
         msg = Parser(policy=default_policy).parse(fp)
@@ -468,7 +468,7 @@ def test_encrypt_msg_not_all_keys(tmpdir, tpath):
 def test_encrypt_msg_multi_rcpts(tmpdir, tpath):
     # we can encypt messages for multple recipients
     key_mgr = pgp.KeyManager()
-    key1, _ = pgpy.PGPKey.from_file(str(tpath / "alice.pub"))
+    key1, _ = pgpy.PGPKey.from_file(str(tpath / "alice1.pub"))
     key2, _ = pgpy.PGPKey.from_file(str(tpath / "bob.pub"))
     key_mgr.add_key(key1)
     key_mgr.add_key(key2)
