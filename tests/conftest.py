@@ -11,6 +11,8 @@ from pgp_milter import PGPMilter
 PATH_OF_TESTS = pathlib.Path(__file__).parent
 HKP_PATH = PATH_OF_TESTS / "samples" / "hkp-corpus" / "hkp-samples.json"
 hkp_requests = json.loads(HKP_PATH.read_text())
+HKP_FAKES_PATH = HKP_PATH.parent / "hkp-samples-fake.json"
+hkp_fake_requests = json.loads(HKP_FAKES_PATH.read_text())
 
 
 # adapted from notmuch:devel/printmimestructure
@@ -88,7 +90,7 @@ def reset_pgpmilter_class_vars(request, monkeypatch):
 
 @pytest.fixture(scope="function", autouse=False)
 def fake_hkp_server(request, requests_mock):
-    for call in hkp_requests:
+    for call in hkp_requests + hkp_fake_requests:
         requests_mock.get(
                 call["call"],
                 status_code=call["status_code"],
