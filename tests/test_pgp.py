@@ -176,6 +176,13 @@ class TestHKPLookup(object):
         key = hkp.get("uli@gnufix.de")
         assert isinstance(key, pgpy.PGPKey)
 
+    def test_get_local(self, fake_hkp_server):
+        # we can HKP-get the key of alice
+        hkp = pgp.HKPLookup("keys.openpgp.org")
+        key = hkp.get("alice@sample.net")
+        assert isinstance(key, pgpy.PGPKey)
+
+
 
 def test_parse_raw(tpath):
     # we can turn raw messages into Message objects
