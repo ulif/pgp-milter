@@ -183,7 +183,6 @@ class TestHKPLookup(object):
         assert isinstance(key, pgpy.PGPKey)
 
 
-
 def test_parse_raw(tpath):
     # we can turn raw messages into Message objects
     headers = [
