@@ -3,9 +3,7 @@
 
 that mimic real HKP responses.
 """
-import os
 import pathlib
-import requests
 import json
 
 
