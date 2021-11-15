@@ -30,7 +30,8 @@ def test_get_config_dict(home_dir, monkeypatch):
     pgphome = str(Path(Path.home(), ".pgphome"))
     assert result == {
         'debug': True, 'socket': 'bar', 'timeout': 300,
-        'bufsize': 8192, 'pgphome': pgphome
+        'bufsize': 8192, 'pgphome': pgphome,
+        'keyserver': 'keys.openpgp.org',
     }
 
 
