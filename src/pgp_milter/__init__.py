@@ -37,6 +37,10 @@ def handle_options(args):
         action="store_true",
         help="Enable debug output."),
     parser.add_argument(
+        "--keyserver",
+        type=str,
+        help="a host we can use as keyserver (default: %(default)s)")
+    parser.add_argument(
         "--pgphome", "-p",
         type=str,
         help="home for pgp keys (default: %(default)s)")

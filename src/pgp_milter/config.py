@@ -8,6 +8,7 @@ OPTIONS_DEFAULTS = dict(
     timeout=300,
     pgphome="~/.pgphome",
     bufsize=8192,
+    keyserver="keys.openpgp.org",
     debug=False,
 )
 
