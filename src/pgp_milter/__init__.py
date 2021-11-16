@@ -177,7 +177,7 @@ class PGPMilter(Milter.Base):
         # delete old values
         for name in set(old_msg.keys()):
             for n in range(len(old_msg.get_all(name)), 0, -1):
-                self.chgheader(name, n-1, '')
+                self.chgheader(name, n - 1, '')
         # add current headers
         for name, val in new_msg.items():
             self.addheader(name, val)
