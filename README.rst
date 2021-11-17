@@ -34,12 +34,17 @@ Then, from this directory, install the package::
 
     [venv] $ pip install -e .
 
+To install also test dependencies, you can do::
+
+    [venv] $ pip install -e ".[tests]"
+
+
 Running Tests
 =============
 
-We use `tox` and `py-test` for testing. So,::
+We support `tox` and `py-test` for testing. So,::
 
-    $ pip install tox pytest
+    $ pip install tox pytest requests-mock
     $ tox
 
 should run all tests with all officially supported Python versions. For quickly
