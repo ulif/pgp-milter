@@ -1,9 +1,12 @@
 HTTP/2 200 
-server: nginx/1.14.2
-date: Sun, 14 Nov 2021 03:05:05 GMT
+server: nginx/1.18.0
+date: Thu, 09 Feb 2023 01:33:53 GMT
 content-type: text/plain; charset=utf-8
 content-length: 76
 vary: Accept-Encoding
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+permissions-policy: interest-cohort=()
 access-control-allow-origin: *
 cache-control: no-cache
 

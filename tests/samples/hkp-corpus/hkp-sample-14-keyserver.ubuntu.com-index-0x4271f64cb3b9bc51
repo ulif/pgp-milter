@@ -1,6 +1,6 @@
 HTTP/1.1 200 OK
-Date: Sun, 14 Nov 2021 03:05:07 GMT
-Server: Hockeypuck/~unreleased
+Date: Thu, 09 Feb 2023 01:33:55 GMT
+Server: Hockeypuck/2.1.0-189-g15ebf24
 Content-Type: text/plain
 Content-Length: 100
 Vary: Accept-Encoding

@@ -1,10 +1,13 @@
 HTTP/2 404 
-server: nginx/1.14.2
-date: Sun, 14 Nov 2021 03:05:04 GMT
+server: nginx/1.18.0
+date: Thu, 09 Feb 2023 01:33:52 GMT
 content-type: text/html; charset=utf-8
-content-length: 46
+content-length: 31
 vary: Accept-Encoding
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+permissions-policy: interest-cohort=()
 access-control-allow-origin: *
 cache-control: no-cache
 
-No key found for email address snowden@nsa.gov
+Verifying your email address…
