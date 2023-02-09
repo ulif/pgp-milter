@@ -32,7 +32,7 @@ def fake_hkp_requests(fake_entry):
                 "Server": "nginx/1.14.2",
                 "Date": "Sun, 14 Nov 2021 03:04:58 GMT",
                 "Content-Type": "application/pgp-keys",
-                "Content-Length": len(body),
+                "Content-Length": str(len(body)),
                 "Last-Modified": "Sat, 14 Aug 2021 01:39:45 GMT",
                 "Connection": "keep-alive",
                 "Content-Disposition": attchmnt,
