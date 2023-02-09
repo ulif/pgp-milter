@@ -7,7 +7,7 @@ def read(fname):
 
 
 install_requires = [
-    "pymilter",
+    "pymilter==1.0.4",
     "PGPy",
     "requests",
 ]
