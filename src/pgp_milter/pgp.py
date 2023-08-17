@@ -196,7 +196,7 @@ def memory_hole(msg, part, replaced_headers=REPLACED_HEADERS):
     for header in msg.keys():
         h = header.lower()
         if h in replaced_headers.keys():
-            del(msg[header])
+            del msg[header]
             if replaced_headers[h].replacement is not None:
                 msg.add_header(header, replaced_headers[h].replacement)
     return msg, new_part
