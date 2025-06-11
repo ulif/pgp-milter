@@ -4,25 +4,25 @@
 #
 #    pip-compile --strip-extras
 #
-certifi==2024.7.4
+certifi==2025.4.26
     # via requests
-cffi==1.15.1
+cffi==1.17.1
     # via cryptography
-charset-normalizer==3.2.0
+charset-normalizer==3.4.2
     # via requests
-cryptography==43.0.1
+cryptography==45.0.4
     # via pgpy
-idna==3.7
+idna==3.10
     # via requests
 pgpy==0.6.0
     # via pgp-milter (setup.py)
-pyasn1==0.5.0
+pyasn1==0.6.1
     # via pgpy
-pycparser==2.21
+pycparser==2.22
     # via cffi
 pymilter==1.0.4
     # via pgp-milter (setup.py)
-requests==2.32.2
+requests==2.32.4
     # via pgp-milter (setup.py)
-urllib3==2.2.2
+urllib3==2.4.0
     # via requests
