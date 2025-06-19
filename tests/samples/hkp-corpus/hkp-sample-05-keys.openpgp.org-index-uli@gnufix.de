@@ -1,15 +1,14 @@
 HTTP/2 200 
-server: nginx/1.18.0
-date: Thu, 09 Feb 2023 01:33:53 GMT
+server: nginx
+date: Thu, 19 Jun 2025 13:31:10 GMT
 content-type: text/plain; charset=utf-8
 content-length: 130
-vary: Accept-Encoding
-x-content-type-options: nosniff
-x-frame-options: SAMEORIGIN
 permissions-policy: interest-cohort=()
+x-frame-options: SAMEORIGIN
+x-content-type-options: nosniff
 access-control-allow-origin: *
 cache-control: no-cache
 
 info:1:1
 pub:8173B77CFE8FD75E65BC6FF66D93033FBC9F6E27:1:4096:1408969864::
-uid:Uli%20Fouquet%20%3Culi@gnufix.de%3E:1672627492::
+uid:Uli%20Fouquet%20%3Culi@gnufix.de%3E:1728086219::
