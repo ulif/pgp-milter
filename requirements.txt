@@ -4,7 +4,7 @@
 #
 #    pip-compile --strip-extras
 #
-certifi==2025.4.26
+certifi==2025.6.15
     # via requests
 cffi==1.17.1
     # via cryptography
@@ -24,5 +24,5 @@ pymilter==1.0.4
     # via pgp-milter (setup.py)
 requests==2.32.4
     # via pgp-milter (setup.py)
-urllib3==2.4.0
+urllib3==2.5.0
     # via requests
