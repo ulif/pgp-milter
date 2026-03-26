@@ -22,7 +22,7 @@ pycparser==3.0
     # via cffi
 pymilter==1.0.4
     # via pgp-milter (setup.py)
-requests==2.32.5
+requests==2.33.0
     # via pgp-milter (setup.py)
 urllib3==2.6.3
     # via requests
